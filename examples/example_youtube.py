@@ -6,14 +6,14 @@ from scraper import IH_scraper
 
 
 # Get a free token at www.influencerhunters.com
-TOKEN = "XXXXXXXXXXX"
+TOKEN = "XXXXXXXXXXXX"
 
 #Initialize sender class 
 scraper = IH_scraper(token_IH_API=TOKEN)
 
 #Send the request to the IH server
 print("sending the request..")
-res, success = scraper.yt.search_keyword("magic")
+res, success = scraper.yt.get_search("magic",2)
 
 
 if success:

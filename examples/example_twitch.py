@@ -13,7 +13,7 @@ scraper = IH_scraper(token_IH_API=TOKEN)
 
 #Send the request to the IH server
 print("sending the request..")
-res, success = scraper.twc.search_keyword("magic")
+res, success = scraper.twc.get_search("magic",depth=2, type="videos")
 
 
 if success:

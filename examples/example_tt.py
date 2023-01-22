@@ -13,7 +13,7 @@ scraper = IH_scraper(token_IH_API=TOKEN)
 
 #Send the request to the IH server
 print("sending the request..")
-res, success = scraper.tt.get_post_from_keyword("maigc", period = 1, sorting = 0, cursor = 0)
+res, success = scraper.tt.get_hashtag_posts(name = "magic", cursor = 0)
 
 
 if success:

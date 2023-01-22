@@ -13,7 +13,7 @@ scraper = IH_scraper(token_IH_API=TOKEN)
 
 #Send the request to the IH server
 print("sending the request, it might take few seconds..")
-res, success = scraper.ig.get_posts_from_username("fedez")
+res, success = scraper.ig.get_user_posts_from_username(username="cristiano", depth=1, oldest_timestamp=1611308425 )
 
 
 if success:
