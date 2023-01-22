@@ -3,37 +3,48 @@ from base_interface import Interface_IH
 
 class Youtube_I_IH(Interface_IH):
 
-	def search_keyword(self, keyword, depth = 1):	
-		"""Fetch list of videos containing the keyword
+  def get_search(self, keyword, depth):
+    """ Fetch posts from a given keyword. """
 
-		Args:
-			keyword (string): keyword name
-			depth (int, optional): search depth. Higher depth-> more posts are retrieved
-		Returns:
-			dictionary: content of the response
-			bool: True if the request succeeded 
-		"""
+    end_point = self.req_url+ '/youtube/search'
+    payload = {'keyword':keyword, 'depth':depth, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_channel_videos(self, browseId, depth):
+    """ Fetch videos for a given channel. """
 
-		end_point = self.req_url+ '/youtube/search'
-		payload = {'keyword':keyword, 'depth':depth, 'token':self.token_IH_API}
+    end_point = self.req_url+ '/youtube/channel/videos'
+    payload = {'browseId':browseId, 'depth':depth, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_channel_get_short_stats(self, id):
+    """ Fetch statistics for a Youtube Short from its ID. """
 
-		r = self.send_request(end_point, payload)
-		return r	
+    end_point = self.req_url+ '/youtube/channel/get-short-stats'
+    payload = {'id':id, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_channel_followers(self, browseId):
+    """ Fetch followers for a channel. """
 
-	def get_channel_videos(self, browseId, depth = 1):	
-		"""Fetch list of videos of a channel
+    end_point = self.req_url+ '/youtube/channel/followers'
+    payload = {'browseId':browseId, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_channel_name_to_id(self, name):
+    """ Convert channel name to ID. """
 
-		Args:
-			browseId (string): id of the user (you can get it from the search_keyword API response)
-			depth (int, optional): search depth. Higher depth-> more posts are retrieved
-		Returns:
-			dictionary: content of the response
-			bool: True if the request succeeded 
-		"""
-
-		end_point = self.req_url+ '/youtube/channel/videos'
-		payload = {'browseId':browseId, 'depth':depth, 'token':self.token_IH_API}
-
-		r = self.send_request(end_point, payload)
-		return r	
-
+    end_point = self.req_url+ '/youtube/channel/name-to-id'
+    payload = {'name':name, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    

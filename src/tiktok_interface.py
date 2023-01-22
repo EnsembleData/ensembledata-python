@@ -3,143 +3,138 @@ from base_interface import Interface_IH
 
 class Tiktok_I_IH(Interface_IH):
 
-	def get_posts_from_hashtag(self, hashtag, cursor = 0):	
-		"""Fetch list of most popular posts related to this hashtag 
-		with information about users
+  def get_hashtag_posts(self, name, cursor):
+    """ Fetch most relevant posts from a given hashtag. This Tiktok API returns max 5000 posts with this API. """
 
-		Args:
-			hashtag (string): hashtag name
-			cursor (int, optional): Starts with zero to get the first chunk of post.
-			Use the otputted cursor as input for next API call, to get next chunk.
+    end_point = self.req_url+ '/tt/hashtag/posts'
+    payload = {'name':name, 'cursor':cursor, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_hashtag_info(self, name):
+    """ Fetch information about an hashtag. """
 
-		Returns:
-			dictionary: content of the response
-			bool: True if the request succeeded 
-		"""
+    end_point = self.req_url+ '/tt/hashtag/info'
+    payload = {'name':name, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_hashtag_recent_posts(self, name, days):
+    """ Fetch all posts from the /hashtag/posts API (Tiktok returns max 5000) and only filter the ones from the last N days. """
 
-		end_point = self.req_url+ '/tt/hashtag/posts'
-		payload = {'name':hashtag, 'cursor':cursor, 'token':self.token_IH_API}
+    end_point = self.req_url+ '/tt/hashtag/recent-posts'
+    payload = {'name':name, 'days':days, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_keyword_search(self, name, cursor, period, sorting, country='de', match_exactly=False, get_author_stats=False):
+    """ Fetch posts from a given keyword and filter them by time. """
 
-		r = self.send_request(end_point, payload)
-		return r	
+    end_point = self.req_url+ '/tt/keyword/search'
+    payload = {'name':name, 'cursor':cursor, 'period':period, 'sorting':sorting, 'country':country, 'match_exactly':match_exactly, 'get_author_stats':get_author_stats, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_user_posts(self, username, depth, oldest_createtime, start_cursor=0, alternative_method=False):
+    """ Fetch user posts from the username. """
 
-	def get_user_info(self, name):	
-		"""Get profile information of a user	
+    end_point = self.req_url+ '/tt/user/posts'
+    payload = {'username':username, 'depth':depth, 'start_cursor':start_cursor, 'oldest_createtime':oldest_createtime, 'alternative_method':alternative_method, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_user_posts_from_secuid(self, secUid, depth, oldest_createtime, start_cursor=0, alternative_method=False):
+    """ Fetch user posts from the secondary user ID. """
 
-		Args:
-			name (string): username (a.k.a. handle)
+    end_point = self.req_url+ '/tt/user/posts-from-secuid'
+    payload = {'secUid':secUid, 'depth':depth, 'start_cursor':start_cursor, 'oldest_createtime':oldest_createtime, 'alternative_method':alternative_method, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_user_info(self, username):
+    """ Fetch user information and statistics from the username. """
 
-		Returns:
-			dictionary: content of the response
-			bool: True if the request succeeded 
-		"""        
-		end_point = self.req_url+ '/tt/user/info'
-		payload = {'username':name, 'token':self.token_IH_API}
+    end_point = self.req_url+ '/tt/user/info'
+    payload = {'username':username, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_user_info_from_secuid(self, secUid):
+    """ Fetch user information and statistics from the secondary user ID. """
 
-		r = self.send_request(end_point, payload)
-		return r
+    end_point = self.req_url+ '/tt/user/info-from-secuid'
+    payload = {'secUid':secUid, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_post_info(self, url, alternative_method=False):
+    """ Fetch post information and statistics from URL. """
 
-	def get_user_posts(self, username, depth = 1):	
-		"""Get the latest posts of a user given the username
+    end_point = self.req_url+ '/tt/post/info'
+    payload = {'url':url, 'alternative_method':alternative_method, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_post_comments(self, aweme_id, cursor):
+    """ Fetch comments for a given post. """
 
-		Args:
-			username (string): username (a.k.a. handle)
+    end_point = self.req_url+ '/tt/post/comments'
+    payload = {'aweme_id':aweme_id, 'cursor':cursor, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_post_comments_replies(self, aweme_id, comment_id, cursor):
+    """ Fetch the replies to a comments for a given post. """
 
-		Returns:
-			dictionary: content of the response
-			bool: True if the request succeeded 
-		"""                
-		end_point = self.req_url+ '/tt/user/posts'
-		payload = {'username':username, 'depth': depth, 'token':self.token_IH_API}
+    end_point = self.req_url+ '/tt/post/comments-replies'
+    payload = {'aweme_id':aweme_id, 'comment_id':comment_id, 'cursor':cursor, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_user_suggested(self, secUid, cursor):
+    """ Fetch the users similar to the given one. """
 
-		r = self.send_request(end_point, payload)
-		return r
+    end_point = self.req_url+ '/tt/user/suggested'
+    payload = {'secUid':secUid, 'cursor':cursor, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_music_posts(self, music_id, cursor):
+    """ Fetch the posts containing a particular music. """
 
-	def get_user_posts_secuid(self, secUid, depth = 1):	
-		"""Get the latest posts of a user given the Secuid
+    end_point = self.req_url+ '/tt/music/posts'
+    payload = {'music_id':music_id, 'cursor':cursor, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_music_info(self, name, cursor, sorting, filter_by):
+    """ Fetch the info from a music string. """
 
-		Args:
-			username (string): username (a.k.a. handle)
+    end_point = self.req_url+ '/tt/music/info'
+    payload = {'name':name, 'cursor':cursor, 'sorting':sorting, 'filter_by':filter_by, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
+  def get_user_followers(self, id, secUid, cursor):
+    """ Fetch followers for a given user. """
 
-		Returns:
-			dictionary: content of the response
-			bool: True if the request succeeded 
-		"""   
-		end_point = self.req_url + "/tt/user/posts-from-secuid"
-		payload = {'secUid':secUid, 'depth': depth, 'token':self.token_IH_API}
-
-		r = self.send_request(end_point, payload)
-		return r
-
-	def get_recent_posts_from_hashtag(self, hashtag, days = 10):	
-		"""Fetch list of recent posts (using the hashtag name) with information 
-		about users.
-
-		Args:
-			hashtag (string): hashtag name
-			days (int, optional): number of last days to retrieve. Defaults to 10.
-
-		Returns:
-			dictionary: content of the response
-			bool: True if the request succeeded 
-		"""
-
-		end_point = self.req_url+ '/tt/hashtag/recent-posts'
-		payload = {'name':hashtag, 'days':days, 'token':self.token_IH_API}
-
-		r = self.send_request(end_point, payload)
-		return r     
-
-	def get_post_from_keyword(self, keyword, period = 0, sorting = 0, cursor = 0):	
-		"""Get the results of a keybard search (posts, etc.)
-
-		Args:
-			keyword (string): keyword (hashtag, name, etc.) to search
-			period (string): how many days. Options: "0" "1" "7" "30" "90" "180"
-			sorting (bool): sorting order. Either 0 or 1
-			cursor (int): At the beginning set to 0. Then it is given by the previous call.
-
-		Returns:
-			dictionary: content of the response
-			bool: True if the request succeeded 
-		"""		
-		end_point = self.req_url+ '/tt/keyword/search'
-		payload = {'name':keyword, 'period':period, "sorting":sorting, "cursor":cursor, 'token':self.token_IH_API}
-
-		r = self.send_request(end_point, payload)
-		return r  
-
-	def get_comments(self, aweme_id, cursor = 0):	
-		"""Fetch latest comments of a post
-
-		Args:
-			aweme_id (string): aweme_id of a post 
-			cursor (int): At the beginning set to 0. Then it is given by the previous call.
-
-		Returns:
-			dictionary: content of the response
-			bool: True if the request succeeded 
-		"""				
-		end_point = self.req_url+ '/tt/post/comments'
-		payload = {"aweme_id":aweme_id, "cursor":cursor, 'token':self.token_IH_API}
-
-		r = self.send_request(end_point, payload)
-		return r  
-
-	def get_comment_replies(self, aweme_id, comment_id, cursor = 0):	
-		"""Fetch latest replies of a comment (of a post)
-
-		Args:
-			aweme_id (string): aweme_id of a post 
-			comment_id (string): comment_id of a comment of that post
-			cursor (int): At the beginning set to 0. Then it is given by the previous call.
-
-		Returns:
-			dictionary: content of the response
-			bool: True if the request succeeded 
-		"""			
-		end_point = self.req_url+ '/tt/post/comments-replies'
-		payload = {"aweme_id":aweme_id, "comment_id":comment_id, "cursor":cursor, 'token':self.token_IH_API}
-
-		r = self.send_request(end_point, payload)
-		return r  
+    end_point = self.req_url+ '/tt/user/followers'
+    payload = {'id':id, 'secUid':secUid, 'cursor':cursor, 'token':self.token_IH_API}
+    
+    r = self.send_request(end_point, payload)
+    return r 
+    
