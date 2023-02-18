@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 class Interface_IH:
-	def __init__(self, token_IH_API, req_url = 'https://www.influencerhunters.com/apis'):
+	def __init__(self, token_IH_API, req_url = 'https://www.ensembledata.com/apis'):
 		self.token_IH_API = token_IH_API
 		self.req_url = req_url
 

@@ -4,7 +4,7 @@ from base_interface import Interface_IH
 class Instagram_I_IH(Interface_IH):
 
   def get_user_posts(self, user_id, depth, oldest_timestamp, chunk_size=10, start_cursor=''):
-    """ Fetch user posts from the user ID. """
+    """ Fetch user posts from the user ID. Depth 1 returns C results where C in chunk_size, depth N returns N * C results. """
 
     end_point = self.req_url+ '/instagram/user/posts'
     payload = {'user_id':user_id, 'depth':depth, 'oldest_timestamp':oldest_timestamp, 'chunk_size':chunk_size, 'start_cursor':start_cursor, 'token':self.token_IH_API}
@@ -13,7 +13,7 @@ class Instagram_I_IH(Interface_IH):
     return r 
     
   def get_user_posts_from_username(self, username, depth, oldest_timestamp, chunk_size=10, start_cursor=''):
-    """ Fetch user posts from username using additional parameters. """
+    """ Fetch user posts from username using additional parameters. Depth 1 returns C results where C in chunk_size, depth N returns N * C results. """
 
     end_point = self.req_url+ '/instagram/user/posts-from-username'
     payload = {'username':username, 'depth':depth, 'oldest_timestamp':oldest_timestamp, 'chunk_size':chunk_size, 'start_cursor':start_cursor, 'token':self.token_IH_API}
@@ -67,7 +67,7 @@ class Instagram_I_IH(Interface_IH):
     return r 
     
   def get_user_igtv(self, user_id, depth):
-    """ Fetch the user IGTV from the user ID. """
+    """ Fetch the user IGTV from the user ID. Depth 1 returns 10 results, depth N returns N * 10 results. """
 
     end_point = self.req_url+ '/instagram/user/igtv'
     payload = {'user_id':user_id, 'depth':depth, 'token':self.token_IH_API}
@@ -76,7 +76,7 @@ class Instagram_I_IH(Interface_IH):
     return r 
     
   def get_user_reels(self, user_id, depth, include_feed_video=True):
-    """ Fetch the user Reels from the user ID. """
+    """ Fetch the user Reels from the user ID. Depth 1 returns 10 results, depth N returns N * 10 results. """
 
     end_point = self.req_url+ '/instagram/user/reels'
     payload = {'user_id':user_id, 'depth':depth, 'include_feed_video':include_feed_video, 'token':self.token_IH_API}
@@ -94,7 +94,7 @@ class Instagram_I_IH(Interface_IH):
     return r 
     
   def get_hashtag_posts(self, name, cursor):
-    """ Fetch most recent posts containing hashtag. """
+    """ Fetch most recent posts containing hashtag. Each cursor returns ~ 30 posts """
 
     end_point = self.req_url+ '/instagram/hashtag/posts'
     payload = {'name':name, 'cursor':cursor, 'token':self.token_IH_API}

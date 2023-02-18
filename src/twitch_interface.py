@@ -4,7 +4,7 @@ from base_interface import Interface_IH
 class Twitch_I_IH(Interface_IH):
 
   def get_search(self, keyword, depth, type):
-    """ Fetch results (videos / channels / games) from a given keyword. """
+    """ Fetch results (videos / channels / games) from a given keyword. Depth 1 returns ~ 15 results, depth N returns ~ N * 15 results. """
 
     end_point = self.req_url+ '/twitch/search'
     payload = {'keyword':keyword, 'depth':depth, 'type':type, 'token':self.token_IH_API}
@@ -13,7 +13,7 @@ class Twitch_I_IH(Interface_IH):
     return r 
     
   def get_user_videos(self, username, depth):
-    """ Fetch a list of videos from the given channel. """
+    """ Fetch a list of videos from the given channel. Depth 1 returns ~ 25 results, depth N returns ~ N * 25 results. """
 
     end_point = self.req_url+ '/twitch/user/videos'
     payload = {'username':username, 'depth':depth, 'token':self.token_IH_API}
