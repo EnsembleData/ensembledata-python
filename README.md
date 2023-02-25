@@ -14,7 +14,7 @@
     <a href="https://www.ensembledata.com/"><strong>Go to the website »</strong></a>
     <br />
     <br />
-    <a href="https://www.ensembledata.com//apis/docs">Read the Documentation</a>
+    <a href="https://www.ensembledata.com/apis/docs">Read the Documentation</a>
     ·
     <a href="https://github.com/EnsembleData/Social-Media-Scraper/issues">Report Bug</a>
     ·
