@@ -1,13 +1,13 @@
-from base_interface import Interface_IH
+from base_interface import Interface_ED
 
 
-class Youtube_I_IH(Interface_IH):
+class Youtube_I_ED(Interface_ED):
 
   def get_search(self, keyword, depth):
     """ Fetch videos from a given keyword. Depth 1 returns ~ 20 videos, Depth N returns ~ 20 * N videos. """
 
     end_point = self.req_url+ '/youtube/search'
-    payload = {'keyword':keyword, 'depth':depth, 'token':self.token_IH_API}
+    payload = {'keyword':keyword, 'depth':depth, 'token':self.token_ED_API}
     
     r = self.send_request(end_point, payload)
     return r 
@@ -16,7 +16,7 @@ class Youtube_I_IH(Interface_IH):
     """ Fetch videos for a given channel. Depth 1 returns ~ 25 videos, Depth N returns ~ 25 * N videos. """
 
     end_point = self.req_url+ '/youtube/channel/videos'
-    payload = {'browseId':browseId, 'depth':depth, 'token':self.token_IH_API}
+    payload = {'browseId':browseId, 'depth':depth, 'token':self.token_ED_API}
     
     r = self.send_request(end_point, payload)
     return r 
@@ -25,7 +25,7 @@ class Youtube_I_IH(Interface_IH):
     """ Fetch Youtube Shorts for a given channel. Depth 1 returns ~ 50 videos, Depth N returns ~ 50 * N videos. """
 
     end_point = self.req_url+ '/youtube/channel/shorts'
-    payload = {'browseId':browseId, 'depth':depth, 'token':self.token_IH_API}
+    payload = {'browseId':browseId, 'depth':depth, 'token':self.token_ED_API}
     
     r = self.send_request(end_point, payload)
     return r 
@@ -34,7 +34,7 @@ class Youtube_I_IH(Interface_IH):
     """ Fetch statistics for a Youtube Short from its ID. """
 
     end_point = self.req_url+ '/youtube/channel/get-short-stats'
-    payload = {'id':id, 'token':self.token_IH_API}
+    payload = {'id':id, 'token':self.token_ED_API}
     
     r = self.send_request(end_point, payload)
     return r 
@@ -43,7 +43,7 @@ class Youtube_I_IH(Interface_IH):
     """ Fetch the number of followers for a channel. """
 
     end_point = self.req_url+ '/youtube/channel/followers'
-    payload = {'browseId':browseId, 'token':self.token_IH_API}
+    payload = {'browseId':browseId, 'token':self.token_ED_API}
     
     r = self.send_request(end_point, payload)
     return r 
@@ -52,7 +52,7 @@ class Youtube_I_IH(Interface_IH):
     """ Get the channel ID from the channel name. """
 
     end_point = self.req_url+ '/youtube/channel/name-to-id'
-    payload = {'name':name, 'token':self.token_IH_API}
+    payload = {'name':name, 'token':self.token_ED_API}
     
     r = self.send_request(end_point, payload)
     return r 

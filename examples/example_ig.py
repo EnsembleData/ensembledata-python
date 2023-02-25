@@ -2,16 +2,16 @@ import sys
 sys.path.append('../src')
 sys.path.append('src')
 
-from scraper import IH_scraper
+from scraper import ED_scraper
 
 
 # Get a free token at www.influencerhunters.com
 TOKEN = "XXXXXXXXXXXX"
 
 #Initialize sender class 
-scraper = IH_scraper(token_IH_API=TOKEN)
+scraper = ED_scraper(token_ED_API=TOKEN)
 
-#Send the request to the IH server
+#Send the request to the ED server
 print("sending the request, it might take few seconds..")
 res, success = scraper.ig.get_user_posts_from_username(username="cristiano", depth=1, oldest_timestamp=1611308425 )
 

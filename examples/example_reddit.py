@@ -2,16 +2,16 @@ import sys
 sys.path.append('../src')
 sys.path.append('src')
 
-from scraper import IH_scraper
+from scraper import ED_scraper
 
 
 # Get a free token at www.influencerhunters.com
 TOKEN = "XXXXXXXXXXXX"
 
 #Initialize sender class 
-scraper = IH_scraper(token_IH_API=TOKEN)
+scraper = ED_scraper(token_ED_API=TOKEN)
 
-#Send the request to the IH server
+#Send the request to the ED server
 print("sending the request..")
 res, success = scraper.r.get_search("magic",sorting="new", timing="month", depth=1)
 

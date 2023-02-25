@@ -2,9 +2,9 @@ import requests
 from datetime import datetime
 
 
-class Interface_IH:
-	def __init__(self, token_IH_API, req_url = 'https://www.ensembledata.com/apis'):
-		self.token_IH_API = token_IH_API
+class Interface_ED:
+	def __init__(self, token_ED_API, req_url = 'https://www.ensembledata.com/apis'):
+		self.token_ED_API = token_ED_API
 		self.req_url = req_url
 
 	def send_request(self, end_point, payload, n_trials = 2):
@@ -21,7 +21,7 @@ class Interface_IH:
 			date = datetime.today().strftime('%Y%m%d')
 		
 		end_point = self.req_url+ '/customer/get-used-units'
-		payload = {'date':date, 'token':self.token_IH_API}
+		payload = {'date':date, 'token':self.token_ED_API}
 
 		r = self.send_request(end_point, payload)
 		return r	
