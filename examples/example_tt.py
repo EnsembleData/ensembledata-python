@@ -5,7 +5,7 @@ sys.path.append('src')
 from scraper import ED_scraper
 
 
-# Get a free token at www.influencerhunters.com
+# Get a free token at https://www.ensembledata.com/register
 TOKEN = "XXXXXXXXXXXX"
 
 #Initialize sender class 
