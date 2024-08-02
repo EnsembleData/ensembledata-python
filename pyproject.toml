@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ensembledata"]
+namespaces = true
+
+[project]
+name = "ensembledata-python"
+authors = [
+    { name = "EnsembleData", email = "hello@ensembledata.com" },
+    { name = "Fayd Speare", email = "fayd@ensembledata.com" }
+]
+version = "0.0.1"
+readme = "README.md"
+description = "Python bindings for the EnsembleData API"
+dependencies = ["httpx"]
+requires-python = ">= 3.7"
+license = { text = "LICENCE" }
+keywords = ["ensembledata api", "tiktok api", "instagram api", "youtube api", "reddit api"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Typing :: Typed",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12"
+]
+
+[project.urls]
+Homepage = "https://ensembledata.com"
+Documenation = "https://ensembledata.com/apis/docs"
+Repository = "https://github.com/ensembledata/ensembledata-python"
+Changelog = "https://github.com/ensembledata/ensembledata-python/blob/master/CHANGELOG.md"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "F",     # pyflakes
+    "E",     # pycodestyle
+    "W",     # pycodestyle
+    "UP",    # pyupgrade
+    "D",     # pydocstyle
+    "C90",   # mccabe
+    "I",     # isort
+    "N",     # pep8-naming
+    "B",     # flake8-bugbear
+    "Q",     # flake8-quotes
+    "SIM",   # flake8-simplify
+    "RET",   # flake8-return
+    "ISC",   # flake8-implicit-str-concat
+    "INP",   # flake8-no-pep420
+    "COM",   # flake8-commas
+    "BLE",   # flake8-blind-except
+    "FBT",   # flake8-boolean-trap
+    "TCH",   # flake8-type-checking
+    "ASYNC", # flake8-async
+    "ANN0",  # flake8-annotations
+    "PL",    # pylint
+    "PERF",  # perflint
+]
+ignore = ["D1", "PLR0913", "ANN003", "D211", "D212", "ISC001", "COM812"]
