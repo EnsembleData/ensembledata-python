@@ -155,7 +155,7 @@ class EDTikTok:
 
         return self.requester.get("/tt/user/posts-from-secuid", params=params)
 
-    def user_info_from_username(self, *, username: str, **kwargs: Any) -> EDResponse:
+    def user_info_from_username(self, username: str, **kwargs: Any) -> EDResponse:
         params = {
             "username": username,
             **kwargs,
@@ -164,8 +164,8 @@ class EDTikTok:
 
     def user_info_from_secuid(
         self,
-        *,
         sec_uid: str,
+        *,
         alternative_method: bool | None = None,
         **kwargs: Any,
     ) -> EDResponse:
@@ -196,7 +196,7 @@ class EDTikTok:
 
     def multi_post_info(self, *, post_ids: Sequence[str], **kwargs: Any) -> EDResponse:
         params = {
-            "ids": ",".join(post_ids),
+            "ids": ";".join(post_ids),
             **kwargs,
         }
         return self.requester.get("/tt/post/multi-info", params=params)
@@ -245,7 +245,7 @@ class EDTikTok:
 
     def music_posts(self, *, music_id: str, cursor: int, **kwargs: Any) -> EDResponse:
         params = {
-            "music_id": music_id,
+            "id": music_id,
             "cursor": cursor,
             **kwargs,
         }
@@ -277,14 +277,14 @@ class EDTikTok:
     def user_followings(
         self,
         *,
-        user_id: str,
+        id: str,
         sec_uid: str,
         cursor: int,
         page_token: str,
         **kwargs: Any,
     ) -> EDResponse:
         params = {
-            "id": user_id,
+            "id": id,
             "secUid": sec_uid,
             "cursor": cursor,
             "page_token": page_token,
@@ -506,7 +506,9 @@ class EDInstagram:
 
         return self.requester.get("/instagram/hashtag/posts", params=params)
 
-    def music_posts(self, *, music_id: str, cursor: str | None = None, **kwargs: Any) -> EDResponse:
+    def music_posts(
+        self, *, music_id: str, cursor: str | None = None, **kwargs: Any
+    ) -> EDResponse:
         params = {
             "id": music_id,
             **kwargs,
@@ -583,7 +585,7 @@ class EDYoutube:
         return self.requester.get("/youtube/hashtag/search", params=params)
 
     def channel_detailed_info(
-        self, *, channel_id: str, from_url: bool | None = None, **kwargs: Any
+        self, *, channel_id: str, *, from_url: bool | None = None, **kwargs: Any
     ) -> EDResponse:
         params = {
             "browseId": channel_id,
@@ -593,7 +595,7 @@ class EDYoutube:
             params["from_url"] = from_url
         return self.requester.get("/youtube/channel/detailed-info", params=params)
 
-    def channel_videos(self, *, channel_id: str, depth: int, **kwargs: Any) -> EDResponse:
+    def channel_videos(self, channel_id: str, *, depth: int, **kwargs: Any) -> EDResponse:
         params = {
             "browseId": channel_id,
             "depth": depth,
@@ -601,7 +603,7 @@ class EDYoutube:
         }
         return self.requester.get("/youtube/channel/videos", params=params)
 
-    def channel_shorts(self, *, channel_id: str, depth: int, **kwargs: Any) -> EDResponse:
+    def channel_shorts(self, channel_id: str, *, depth: int, **kwargs: Any) -> EDResponse:
         params = {
             "browseId": channel_id,
             "depth": depth,
@@ -631,21 +633,21 @@ class EDYoutube:
             params=params,
         )
 
-    def channel_subscribers(self, *, channel_id: str, **kwargs: Any) -> EDResponse:
+    def channel_subscribers(self, channel_id: str, **kwargs: Any) -> EDResponse:
         params = {
             "browseId": channel_id,
             **kwargs,
         }
         return self.requester.get("/youtube/channel/followers", params=params)
 
-    def channel_username_to_id(self, *, username: str, **kwargs: Any) -> EDResponse:
+    def channel_username_to_id(self, username: str, **kwargs: Any) -> EDResponse:
         params = {
             "name": username,
             **kwargs,
         }
         return self.requester.get("/youtube/channel/name-to-id", params=params)
 
-    def channel_id_to_username(self, *, channel_id: str, **kwargs: Any) -> EDResponse:
+    def channel_id_to_username(self, channel_id: str, **kwargs: Any) -> EDResponse:
         params = {
             "browserId": channel_id,
             **kwargs,
@@ -679,7 +681,9 @@ class EDYoutube:
 
 class EDClient:
     def __init__(self, token: str, *, timeout: int = 600, max_network_retries: int = 3):
-        self.requester = Requester(token, timeout=timeout, max_network_retries=max_network_retries)
+        self.requester = Requester(
+            token, timeout=timeout, max_network_retries=max_network_retries
+        )
         self.customer = EDCustomer(self.requester)
         self.tiktok = EDTikTok(self.requester)
         self.instagram = EDInstagram(self.requester)
