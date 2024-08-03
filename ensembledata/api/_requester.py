@@ -49,7 +49,9 @@ class Requester:
     def get(self, url: str, params: dict[str, Any]) -> EDResponse:
         for attempt in range(self.max_network_retries):
             try:
-                res = httpx.get(f"{BASE_URL}{url}", params={"token": self.token, **params})
+                res = httpx.get(
+                    f"{BASE_URL}{url}", params={"token": self.token, **params}, timeout=self.timeout
+                )
                 return _handle_response(res)
             except httpx.RequestError as e:  # noqa: PERF203
                 if attempt == self.max_network_retries - 1:
@@ -65,7 +67,7 @@ class AsyncRequester:
         self.max_network_retries = max_network_retries
 
     async def get(self, url: str, params: dict[str, Any]) -> EDResponse:
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=self.timeout) as client:
             for attempt in range(self.max_network_retries):
                 try:
                     res = await client.get(
