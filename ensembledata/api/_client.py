@@ -68,7 +68,7 @@ class EDTikTok:
         **kwargs: Any,
     ) -> EDResponse:
         params = {
-            "keyword": keyword,
+            "name": keyword,
             "cursor": cursor,
             "period": period,
             "sorting": sorting,
@@ -81,7 +81,7 @@ class EDTikTok:
         if get_author_stats is not None:
             params["get_author_stats"] = get_author_stats
 
-        return self.requester.get("/tt/keyword/posts", params=params)
+        return self.requester.get("/tt/keyword/search", params=params)
 
     def full_keyword_search(
         self,
@@ -91,11 +91,10 @@ class EDTikTok:
         sorting: Literal["0", "1"] | None = None,
         country: str | None = None,
         match_exactly: bool | None = None,
-        get_author_stats: bool | None = None,
         **kwargs: Any,
     ) -> EDResponse:
         params = {
-            "keyword": keyword,
+            "name": keyword,
             "period": period,
             **kwargs,
         }
@@ -105,10 +104,8 @@ class EDTikTok:
             params["country"] = country
         if match_exactly is not None:
             params["match_exactly"] = match_exactly
-        if get_author_stats is not None:
-            params["get_author_stats"] = get_author_stats
 
-        return self.requester.get("/tt/keyword/posts", params=params)
+        return self.requester.get("/tt/keyword/full-search", params=params)
 
     def user_posts_from_username(
         self,
@@ -163,7 +160,7 @@ class EDTikTok:
             "username": username,
             **kwargs,
         }
-        return self.requester.get("/tt/user/info-from-secuid", params=params)
+        return self.requester.get("/tt/user/info", params=params)
 
     def user_info_from_secuid(
         self,
@@ -226,19 +223,19 @@ class EDTikTok:
             "cursor": cursor,
             **kwargs,
         }
-        return self.requester.get("/tt/post/comment-replies", params=params)
+        return self.requester.get("/tt/post/comments-replies", params=params)
 
     def music_search(
         self,
         *,
-        name: str,
+        keyword: str,
         cursor: int,
         sorting: Literal["0", "1", "2", "3", "4"],
         filter_by: Literal["0", "1", "2"],
         **kwargs: Any,
     ) -> EDResponse:
         params = {
-            "name": name,
+            "name": keyword,
             "cursor": cursor,
             "sorting": sorting,
             "filter_by": filter_by,
@@ -264,13 +261,13 @@ class EDTikTok:
     def user_followers(
         self,
         *,
-        user_id: str,
+        id: str,
         sec_uid: str,
         cursor: int,
         **kwargs: Any,
     ) -> EDResponse:
         params = {
-            "id": user_id,
+            "id": id,
             "secUid": sec_uid,
             "cursor": cursor,
             **kwargs,
@@ -290,7 +287,7 @@ class EDTikTok:
             "id": user_id,
             "secUid": sec_uid,
             "cursor": cursor,
-            "pageToken": page_token,
+            "page_token": page_token,
             **kwargs,
         }
         return self.requester.get("/tt/user/followings", params=params)
@@ -343,11 +340,13 @@ class EDTwitch:
         self,
         *,
         keyword: str,
+        depth: int,
         type: Literal["videos", "channels", "games"],
         **kwargs: Any,
     ) -> EDResponse:
         params = {
             "keyword": keyword,
+            "depth": depth,
             "type": type,
             **kwargs,
         }
@@ -382,13 +381,13 @@ class EDInstagram:
             **kwargs,
         }
         if oldest_timestamp is not None:
-            params["oldestTimestamp"] = oldest_timestamp
+            params["oldest_timestamp"] = oldest_timestamp
         if chunk_size is not None:
-            params["chunkSize"] = chunk_size
+            params["chunk_size"] = chunk_size
         if start_cursor is not None:
-            params["startCursor"] = start_cursor
+            params["start_cursor"] = start_cursor
         if alternative_method is not None:
-            params["alternativeMethod"] = alternative_method
+            params["alternative_method"] = alternative_method
 
         return self.requester.get("/instagram/user/posts", params=params)
 
@@ -438,13 +437,13 @@ class EDInstagram:
             **kwargs,
         }
         if include_feed_video is not None:
-            params["includeFeedVideo"] = include_feed_video
+            params["include_feed_video"] = include_feed_video
         if oldest_timestamp is not None:
-            params["oldestTimestamp"] = oldest_timestamp
+            params["oldest_timestamp"] = oldest_timestamp
         if start_cursor is not None:
-            params["startCursor"] = start_cursor
+            params["start_cursor"] = start_cursor
         if chunk_size is not None:
-            params["chunkSize"] = chunk_size
+            params["chunk_size"] = chunk_size
 
         return self.requester.get("/instagram/user/reels", params=params)
 
@@ -463,7 +462,7 @@ class EDInstagram:
         if cursor is not None:
             params["cursor"] = cursor
         if chunk_size is not None:
-            params["chunkSize"] = chunk_size
+            params["chunk_size"] = chunk_size
 
         return self.requester.get("/instagram/user/tagged-posts", params=params)
 
@@ -494,17 +493,17 @@ class EDInstagram:
         **kwargs: Any,
     ) -> EDResponse:
         params = {
-            "hashtag": hashtag,
+            "name": hashtag,
             **kwargs,
         }
         if cursor is not None:
             params["cursor"] = cursor
         if chunk_size is not None:
-            params["chunkSize"] = chunk_size
+            params["chunk_size"] = chunk_size
         if get_author_info is not None:
-            params["getAuthorInfo"] = get_author_info
+            params["get_author_info"] = get_author_info
         if alternative_method is not None:
-            params["alternativeMethod"] = alternative_method
+            params["alternative_method"] = alternative_method
 
         return self.requester.get("/instagram/hashtag/posts", params=params)
 
@@ -541,7 +540,7 @@ class EDYoutube:
         **kwargs: Any,
     ) -> EDResponse:
         params = {
-            "name": keyword,
+            "keyword": keyword,
             "depth": depth,
             **kwargs,
         }
@@ -584,11 +583,15 @@ class EDYoutube:
 
         return self.requester.get("/youtube/hashtag/search", params=params)
 
-    def channel_detailed_info(self, *, channel_id: str, **kwargs: Any) -> EDResponse:
+    def channel_detailed_info(
+        self, *, channel_id: str, from_url: bool | None = None, **kwargs: Any
+    ) -> EDResponse:
         params = {
             "browseId": channel_id,
             **kwargs,
         }
+        if from_url is not None:
+            params["from_url"] = from_url
         return self.requester.get("/youtube/channel/detailed-info", params=params)
 
     def channel_videos(self, *, channel_id: str, depth: int, **kwargs: Any) -> EDResponse:
@@ -636,9 +639,9 @@ class EDYoutube:
         }
         return self.requester.get("/youtube/channel/followers", params=params)
 
-    def channel_username_to_id(self, *, name: str, **kwargs: Any) -> EDResponse:
+    def channel_username_to_id(self, *, username: str, **kwargs: Any) -> EDResponse:
         params = {
-            "name": name,
+            "name": username,
             **kwargs,
         }
         return self.requester.get("/youtube/channel/name-to-id", params=params)
