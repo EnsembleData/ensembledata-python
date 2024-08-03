@@ -112,8 +112,8 @@ class EDTikTokAsync:
 
     async def user_posts_from_username(
         self,
-        *,
         username: str,
+        *,
         depth: int,
         start_cursor: int | None = None,
         oldest_createtime: int | None = None,
@@ -136,8 +136,8 @@ class EDTikTokAsync:
 
     async def user_posts_from_secuid(
         self,
-        *,
         sec_uid: str,
+        *,
         depth: int,
         start_cursor: int | None = None,
         oldest_createtime: int | None = None,
@@ -631,7 +631,7 @@ class EDYoutubeAsync:
             params=params,
         )
 
-    async def channel_followers(self, *, channel_id: str, **kwargs: Any) -> EDResponse:
+    async def channel_subscribers(self, *, channel_id: str, **kwargs: Any) -> EDResponse:
         params = {
             "browseId": channel_id,
             **kwargs,
