@@ -1,5 +1,7 @@
 # EnsembleData Python API
 
+[![pypi](https://img.shields.io/pypi/v/ensembledata-python?color=%2334D058&label=pypi%20package)](https://pypi.org/project/ensembledata-python/)
+
 ## Documentation
 
 Check out the [API docs](https://ensembledata.com/apis/docs) to see which endpoints are available for each social media and for detailed descriptions of their parameters and functionality.
