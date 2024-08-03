@@ -412,10 +412,9 @@ class EDInstagramAsync:
         }
         return await self.requester.get("/instagram/user/detailed-info", params=params)
 
-    async def user_followers(self, *, user_id: int, cursor: int, **kwargs: Any) -> EDResponse:
+    async def user_followers(self, *, user_id: int, **kwargs: Any) -> EDResponse:
         params = {
             "user_id": user_id,
-            "cursor": cursor,
             **kwargs,
         }
         return await self.requester.get("/instagram/user/followers", params=params)
@@ -511,7 +510,7 @@ class EDInstagramAsync:
         self, *, music_id: str, cursor: str | None = None, **kwargs: Any
     ) -> EDResponse:
         params = {
-            "music_id": music_id,
+            "id": music_id,
             **kwargs,
         }
         if cursor is not None:

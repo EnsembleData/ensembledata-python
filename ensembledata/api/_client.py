@@ -412,10 +412,9 @@ class EDInstagram:
         }
         return self.requester.get("/instagram/user/detailed-info", params=params)
 
-    def user_followers(self, *, user_id: int, cursor: int, **kwargs: Any) -> EDResponse:
+    def user_followers(self, *, user_id: int, **kwargs: Any) -> EDResponse:
         params = {
             "user_id": user_id,
-            "cursor": cursor,
             **kwargs,
         }
         return self.requester.get("/instagram/user/followers", params=params)
@@ -509,7 +508,7 @@ class EDInstagram:
 
     def music_posts(self, *, music_id: str, cursor: str | None = None, **kwargs: Any) -> EDResponse:
         params = {
-            "music_id": music_id,
+            "id": music_id,
             **kwargs,
         }
         if cursor is not None:
