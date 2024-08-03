@@ -8,7 +8,7 @@ from warnings import warn
 if sys.version_info >= (3, 8):
     from importlib.metadata import version
 
-    VERSION = version("ensembledata-python")
+    VERSION = version("ensembledata")
 else:
     VERSION = "unknown"
 
