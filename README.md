@@ -45,6 +45,9 @@ Explore the extensive [usage documentation for the Instagram API](https://github
 #### Youtube Usage Docs
 Explore more extensive [usage documentation for the Youtube API](https://github.com/ensembledata/youtube-scraper).
 
+
+&nbsp;
+
 ### Missing Endpoints / Parameters
 
 If you find that one of the endpoints from our [API docs](https://ensembledata.com/apis/docs) is not yet available in this package, you can use the `EDClient.request` method to specify the endpoint manually in the meantime. 
@@ -63,6 +66,8 @@ from ensembledata.api import EDClient
 client = EDClient("API-TOKEN")
 result = client.instagram.user_info(username="...", extra_params={"baz": "..."})
 ```
+
+&nbsp;
 
 ### Handling Errors
 
@@ -92,6 +97,8 @@ except Exception as e:
 
     
 ```
+
+&nbsp;
 
 
 ### Async 
