@@ -37,13 +37,13 @@ print("Units charged:", result.units_charged)
 ```
 
 #### TikTok Usage Docs
- Find the extensive [usage documentation for the TikTok API here](https://github.com/ensembledata/tiktok-scraper).
+Explore the extensive [usage documentation for the TikTok API](https://github.com/ensembledata/tiktok-scraper).
 
 #### Instagram Usage Docs
-Find the extensive [usage documentation for the Instagram API here](https://github.com/ensembledata/instagram-scraper).
+Explore the extensive [usage documentation for the Instagram API](https://github.com/ensembledata/instagram-scraper).
 
 #### Youtube Usage Docs
-Find more extensive [usage documentation for the Youtube API here](https://github.com/ensembledata/youtube-scraper).
+Explore more extensive [usage documentation for the Youtube API](https://github.com/ensembledata/youtube-scraper).
 
 ### Missing Endpoints / Parameters
 
@@ -53,15 +53,15 @@ If you find that one of the endpoints from our [API docs](https://ensembledata.c
 from ensembledata.api import EDClient
 
 client = EDClient("API-TOKEN")
-result = client.request("/instagram/[example]", foo="...", bar="...")
+result = client.request("/instagram/[example]", params={"foo": "...", "bar": "..."})
 ```
 
-If you find that one the parameters to an existing endpoint is missing, you can still send this parameter via a keyword argument as shown for the `baz` parameter below:
+If you find that one the parameters to an existing endpoint is missing, you can still send this parameter via the `extra_params` dictionary which is available on all endpoint methods. See the example below:
 ```python
 from ensembledata.api import EDClient
 
 client = EDClient("API-TOKEN")
-result = client.instagram.user_info(username="...", baz="...")
+result = client.instagram.user_info(username="...", extra_params={"baz": "..."})
 ```
 
 ### Handling Errors
