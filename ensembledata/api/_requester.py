@@ -6,7 +6,8 @@ from warnings import warn
 
 import httpx
 
-from ._response import EDDataResponse, EDErrorResponse, EDResponse
+from ._errors import EDError
+from ._response import EDResponse
 
 BASE_URL = "https://ensembledata.com/apis"
 
@@ -25,9 +26,9 @@ def _handle_response(res: httpx.Response) -> EDResponse:
     # for a 4xx status code. Thus, we'll use the presence of "data" as the indicator of a
     # successful, or rather a `data`, response.
     if "data" in payload:
-        return EDDataResponse(res.status_code, payload.get("data"), units_charged)
+        return EDResponse(res.status_code, payload.get("data"), units_charged)
 
-    return EDErrorResponse(res.status_code, payload.get("detail"), units_charged)
+    raise EDError(res.status_code, payload.get("detail"), units_charged)
 
 
 def _check_token(token: str) -> None:
