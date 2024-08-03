@@ -11,7 +11,7 @@ namespaces = true
 "ensembledata.api" = ["py.typed"]
 
 [project]
-name = "ensembledata-python"
+name = "ensembledata"
 authors = [
     { name = "EnsembleData", email = "hello@ensembledata.com" },
     { name = "Fayd Speare", email = "fayd@ensembledata.com" }

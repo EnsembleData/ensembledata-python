@@ -1,6 +1,6 @@
 # EnsembleData Python API
 
-[![pypi](https://img.shields.io/pypi/v/ensembledata-python?color=%2334D058&label=pypi%20package)](https://pypi.org/project/ensembledata-python/)
+[![pypi](https://img.shields.io/pypi/v/ensembledata?color=%2334D058&label=pypi%20package)](https://pypi.org/project/ensembledata/)
 
 ## Documentation
 
@@ -11,7 +11,7 @@ Check out the [API docs](https://ensembledata.com/apis/docs) to see which endpoi
 Install the package with pip as you would any other python package.
 
 ```bash
-pip install ensembledata-python
+pip install ensembledata
 ```
 
 ### Requirements
