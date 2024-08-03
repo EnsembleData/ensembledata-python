@@ -14,7 +14,7 @@ pip install ensembledata-python
 
 ### Requirements
 
-- The package currently supports Python 3.7 and above.
+- The package only supports Python 3.7 and above.
 
 ## Usage
 
@@ -35,6 +35,15 @@ print("Units charged:", result.units_charged)
 # result = client.instagram.user_info(username="daviddobrik")
 # result = client.youtube.channel_subscribers(channel_id="UCnQghMm3Z164JFhScQYFTBw")
 ```
+
+#### TikTok Usage Docs
+ Find the extensive [usage documentation for the TikTok API here](https://github.com/ensembledata/tiktok-scraper).
+
+#### Instagram Usage Docs
+Find the extensive [usage documentation for the Instagram API here](https://github.com/ensembledata/instagram-scraper).
+
+#### Youtube Usage Docs
+Find more extensive [usage documentation for the Youtube API here](https://github.com/ensembledata/youtube-scraper).
 
 ### Missing Endpoints / Parameters
 
