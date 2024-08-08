@@ -26,7 +26,7 @@ class EDErrorCode(IntEnum):
     TOKEN_NOT_FOUND = 491
 
 
-def _handle_response(res: httpx.Response) -> EDResponse:
+def _handle_response(res: httpx.Response, *, return_top_level_data: bool) -> EDResponse:
     units_charged = res.headers.get("units_charged", 0)
     payload = res.json()
     assert isinstance(payload, dict)
@@ -36,6 +36,11 @@ def _handle_response(res: httpx.Response) -> EDResponse:
     # for a 4xx status code. Thus, we'll use the presence of "data" as the indicator of a
     # successful, or rather a `data`, response.
     if "data" in payload:
+        # There are a couple of endpoints that don't use a single top level "data" field, but
+        # rather have multiple top level fields, for example "nextCursor".
+        if return_top_level_data:
+            return EDResponse(res.status_code, payload, units_charged)
+
         return EDResponse(res.status_code, payload.get("data"), units_charged)
 
     raise EDError(res.status_code, payload.get("detail"), units_charged)
@@ -57,7 +62,9 @@ class Requester:
         self.timeout = timeout
         self.max_network_retries = max_network_retries
 
-    def get(self, url: str, params: dict[str, Any]) -> EDResponse:
+    def get(
+        self, url: str, params: dict[str, Any], *, return_top_level_data: bool = False
+    ) -> EDResponse:
         for attempt in range(self.max_network_retries):
             try:
                 res = httpx.get(
@@ -66,7 +73,7 @@ class Requester:
                     timeout=self.timeout,
                     headers={"User-Agent": f"ensembledata-python-{VERSION}"},
                 )
-                return _handle_response(res)
+                return _handle_response(res, return_top_level_data=return_top_level_data)
             except httpx.RequestError as e:  # noqa: PERF203
                 if attempt == self.max_network_retries - 1:
                     raise e
@@ -80,7 +87,9 @@ class AsyncRequester:
         self.timeout = timeout
         self.max_network_retries = max_network_retries
 
-    async def get(self, url: str, params: dict[str, Any]) -> EDResponse:
+    async def get(
+        self, url: str, params: dict[str, Any], return_top_level_data: bool = False
+    ) -> EDResponse:
         async with httpx.AsyncClient(timeout=self.timeout) as client:
             for attempt in range(self.max_network_retries):
                 try:
@@ -89,7 +98,7 @@ class AsyncRequester:
                         params={"token": self.token, **params},
                         headers={"User-Agent": f"ensembledata-python-{VERSION}"},
                     )
-                    return _handle_response(res)
+                    return _handle_response(res, return_top_level_data=return_top_level_data)
                 except httpx.RequestError as e:  # noqa: PERF203
                     if attempt == self.max_network_retries - 1:
                         raise e

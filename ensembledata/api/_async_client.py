@@ -144,7 +144,7 @@ class EDTikTokAsync:
         if extra_params is not None:
             params = {**extra_params, **params}
 
-        return await self.requester.get("/tt/user/posts", params=params)
+        return await self.requester.get("/tt/user/posts", params=params, return_top_level_data=True)
 
     async def user_posts_from_secuid(
         self,
@@ -169,7 +169,9 @@ class EDTikTokAsync:
         if extra_params is not None:
             params = {**extra_params, **params}
 
-        return await self.requester.get("/tt/user/posts-from-secuid", params=params)
+        return await self.requester.get(
+            "/tt/user/posts-from-secuid", params=params, return_top_level_data=True
+        )
 
     async def user_info_from_username(
         self, username: str, extra_params: dict[str, Any] | None = None
