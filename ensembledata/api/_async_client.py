@@ -126,7 +126,7 @@ class EDTikTokAsync:
         username: str,
         *,
         depth: int,
-        start_cursor: int | None = None,
+        cursor: int | None = None,
         oldest_createtime: int | None = None,
         alternative_method: bool | None = None,
         extra_params: dict[str, Any] | None = None,
@@ -135,8 +135,8 @@ class EDTikTokAsync:
             "username": username,
             "depth": depth,
         }
-        if start_cursor is not None:
-            params["start_cursor"] = start_cursor
+        if cursor is not None:
+            params["start_cursor"] = cursor
         if oldest_createtime is not None:
             params["oldest_createtime"] = oldest_createtime
         if alternative_method is not None:
@@ -151,7 +151,7 @@ class EDTikTokAsync:
         sec_uid: str,
         *,
         depth: int,
-        start_cursor: int | None = None,
+        cursor: int | None = None,
         oldest_createtime: int | None = None,
         alternative_method: bool | None = None,
         extra_params: dict[str, Any] | None = None,
@@ -160,8 +160,8 @@ class EDTikTokAsync:
             "secUid": sec_uid,
             "depth": depth,
         }
-        if start_cursor is not None:
-            params["start_cursor"] = start_cursor
+        if cursor is not None:
+            params["start_cursor"] = cursor
         if oldest_createtime is not None:
             params["oldest_createtime"] = oldest_createtime
         if alternative_method is not None:
@@ -231,12 +231,17 @@ class EDTikTokAsync:
         return await self.requester.get("/tt/post/multi-info", params=params)
 
     async def post_comments(
-        self, *, aweme_id: str, cursor: int, extra_params: dict[str, Any] | None = None
+        self,
+        *,
+        aweme_id: str,
+        cursor: int | None = None,
+        extra_params: dict[str, Any] | None = None,
     ) -> EDResponse:
-        params = {
+        params: dict[str, Any] = {
             "aweme_id": aweme_id,
-            "cursor": cursor,
         }
+        if cursor is not None:
+            params["cursor"] = cursor
         if extra_params is not None:
             params = {**extra_params, **params}
         return await self.requester.get("/tt/post/comments", params=params)
@@ -246,14 +251,15 @@ class EDTikTokAsync:
         *,
         aweme_id: str,
         comment_id: str,
-        cursor: int,
+        cursor: int | None = None,
         extra_params: dict[str, Any] | None = None,
     ) -> EDResponse:
-        params = {
+        params: dict[str, Any] = {
             "aweme_id": aweme_id,
             "comment_id": comment_id,
-            "cursor": cursor,
         }
+        if cursor is not None:
+            params["cursor"] = cursor
         if extra_params is not None:
             params = {**extra_params, **params}
         return await self.requester.get("/tt/post/comments-replies", params=params)
@@ -262,28 +268,34 @@ class EDTikTokAsync:
         self,
         *,
         keyword: str,
-        cursor: int,
+        cursor: int | None = None,
         sorting: Literal["0", "1", "2", "3", "4"],
         filter_by: Literal["0", "1", "2"],
         extra_params: dict[str, Any] | None = None,
     ) -> EDResponse:
-        params = {
+        params: dict[str, Any] = {
             "name": keyword,
-            "cursor": cursor,
             "sorting": sorting,
             "filter_by": filter_by,
         }
+        if cursor is not None:
+            params["cursor"] = cursor
         if extra_params is not None:
             params = {**extra_params, **params}
         return await self.requester.get("/tt/music/info", params=params)
 
     async def music_posts(
-        self, *, music_id: str, cursor: int, extra_params: dict[str, Any] | None = None
+        self,
+        *,
+        music_id: str,
+        cursor: int | None = None,
+        extra_params: dict[str, Any] | None = None,
     ) -> EDResponse:
-        params = {
+        params: dict[str, Any] = {
             "id": music_id,
-            "cursor": cursor,
         }
+        if cursor is not None:
+            params["cursor"] = cursor
         if extra_params is not None:
             params = {**extra_params, **params}
         return await self.requester.get("/tt/music/posts", params=params)
@@ -303,14 +315,15 @@ class EDTikTokAsync:
         *,
         id: str,
         sec_uid: str,
-        cursor: int,
+        cursor: int | None = None,
         extra_params: dict[str, Any] | None = None,
     ) -> EDResponse:
-        params = {
+        params: dict[str, Any] = {
             "id": id,
             "secUid": sec_uid,
-            "cursor": cursor,
         }
+        if cursor is not None:
+            params["cursor"] = cursor
         if extra_params is not None:
             params = {**extra_params, **params}
         return await self.requester.get("/tt/user/followers", params=params)
@@ -320,27 +333,30 @@ class EDTikTokAsync:
         *,
         id: str,
         sec_uid: str,
-        cursor: int,
-        page_token: str,
+        cursor: int | None = None,
+        page_token: str | None = None,
         extra_params: dict[str, Any] | None = None,
     ) -> EDResponse:
-        params = {
+        params: dict[str, Any] = {
             "id": id,
             "secUid": sec_uid,
-            "cursor": cursor,
-            "page_token": page_token,
         }
+        if cursor is not None:
+            params["cursor"] = cursor
+        if page_token is not None:
+            params["page_token"] = page_token
         if extra_params is not None:
             params = {**extra_params, **params}
         return await self.requester.get("/tt/user/followings", params=params)
 
     async def user_liked_posts(
-        self, *, sec_uid: str, cursor: int, extra_params: dict[str, Any] | None = None
+        self, *, sec_uid: str, cursor: int | None = None, extra_params: dict[str, Any] | None = None
     ) -> EDResponse:
-        params = {
+        params: dict[str, Any] = {
             "secUid": sec_uid,
-            "cursor": cursor,
         }
+        if cursor is not None:
+            params["cursor"] = cursor
         if extra_params is not None:
             params = {**extra_params, **params}
         return await self.requester.get("/tt/user/liked-posts", params=params)
@@ -424,7 +440,7 @@ class EDInstagramAsync:
         depth: int,
         oldest_timestamp: int | None = None,
         chunk_size: int | None = None,
-        start_cursor: str | None = None,
+        cursor: str | None = None,
         alternative_method: bool | None = None,
         extra_params: dict[str, Any] | None = None,
     ) -> EDResponse:
@@ -436,8 +452,8 @@ class EDInstagramAsync:
             params["oldest_timestamp"] = oldest_timestamp
         if chunk_size is not None:
             params["chunk_size"] = chunk_size
-        if start_cursor is not None:
-            params["start_cursor"] = start_cursor
+        if cursor is not None:
+            params["start_cursor"] = cursor
         if alternative_method is not None:
             params["alternative_method"] = alternative_method
         if extra_params is not None:
@@ -492,7 +508,7 @@ class EDInstagramAsync:
         depth: int,
         include_feed_video: bool | None = None,
         oldest_timestamp: int | None = None,
-        start_cursor: str | None = None,
+        cursor: str | None = None,
         chunk_size: int | None = None,
         extra_params: dict[str, Any] | None = None,
     ) -> EDResponse:
@@ -504,8 +520,8 @@ class EDInstagramAsync:
             params["include_feed_video"] = include_feed_video
         if oldest_timestamp is not None:
             params["oldest_timestamp"] = oldest_timestamp
-        if start_cursor is not None:
-            params["start_cursor"] = start_cursor
+        if cursor is not None:
+            params["start_cursor"] = cursor
         if chunk_size is not None:
             params["chunk_size"] = chunk_size
         if extra_params is not None:
@@ -611,7 +627,7 @@ class EDYoutubeAsync:
         *,
         keyword: str,
         depth: int,
-        start_cursor: str | None = None,
+        cursor: str | None = None,
         period: Literal["overall", "hour", "today", "week", "month", "year"] | None = None,
         sorting: Literal["relevance", "time", "views", "rating"] | None = None,
         get_additional_info: bool | None = None,
@@ -621,8 +637,8 @@ class EDYoutubeAsync:
             "keyword": keyword,
             "depth": depth,
         }
-        if start_cursor is not None:
-            params["start_cursor"] = start_cursor
+        if cursor is not None:
+            params["start_cursor"] = cursor
         if period is not None:
             params["period"] = period
         if sorting is not None:
@@ -776,12 +792,13 @@ class EDYoutubeAsync:
         return await self.requester.get("/youtube/music/id-to-shorts", params=params)
 
     async def video_comments(
-        self, *, id: str, cursor: str, extra_params: dict[str, Any] | None = None
+        self, *, id: str, cursor: str | None = None, extra_params: dict[str, Any] | None = None
     ) -> EDResponse:
         params = {
             "id": id,
-            "cursor": cursor,
         }
+        if cursor is not None:
+            params["cursor"] = cursor
         if extra_params is not None:
             params = {**extra_params, **params}
         return await self.requester.get("/youtube/video/comments", params=params)

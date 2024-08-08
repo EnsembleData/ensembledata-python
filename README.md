@@ -33,19 +33,15 @@ print("Data: ", result.data)
 print("Units charged:", result.units_charged)
 
 # Other Examples:
-#
 # result = client.instagram.user_info(username="daviddobrik")
 # result = client.youtube.channel_subscribers(channel_id="UCnQghMm3Z164JFhScQYFTBw")
 ```
 
-#### TikTok Usage Docs
-Explore the extensive [usage documentation for the TikTok API](https://github.com/ensembledata/tiktok-scraper).
+#### TikTok Guide
+Get started with the [TikTok API Guide](https://github.com/ensembledata/tiktok-scraper). Find out which endpoints are available, and how you can use them with examples using the ensembledata python package.
 
-#### Instagram Usage Docs
-Explore the extensive [usage documentation for the Instagram API](https://github.com/ensembledata/instagram-scraper).
-
-#### Youtube Usage Docs
-Explore more extensive [usage documentation for the Youtube API](https://github.com/ensembledata/youtube-scraper).
+#### Instagram Guide
+Get started with the [Instagram API Guide](https://github.com/ensembledata/instagram-scraper). Find out which endpoints are available, and how you can use them with examples using the ensembledata python package.
 
 
 &nbsp;

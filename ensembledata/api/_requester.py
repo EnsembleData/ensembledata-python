@@ -14,7 +14,7 @@ else:
 
 import httpx
 
-from ._errors import EDError
+from .errors import EDError
 from ._response import EDResponse
 
 BASE_URL = "https://ensembledata.com/apis"
@@ -64,7 +64,7 @@ class Requester:
                     f"{BASE_URL}{url}",
                     params={"token": self.token, **params},
                     timeout=self.timeout,
-                    headers={VERSION_HEADER: VERSION},
+                    headers={"User-Agent": f"ensembledata-python-{VERSION}"},
                 )
                 return _handle_response(res)
             except httpx.RequestError as e:  # noqa: PERF203
@@ -87,7 +87,7 @@ class AsyncRequester:
                     res = await client.get(
                         f"{BASE_URL}{url}",
                         params={"token": self.token, **params},
-                        headers={VERSION_HEADER: VERSION},
+                        headers={"User-Agent": f"ensembledata-python-{VERSION}"},
                     )
                     return _handle_response(res)
                 except httpx.RequestError as e:  # noqa: PERF203
