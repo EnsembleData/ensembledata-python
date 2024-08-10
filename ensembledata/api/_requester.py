@@ -8,10 +8,10 @@ import httpx
 
 from ._response import EDResponse
 from .errors import EDError
-from ..api import __version__
+from ._version import version
 
 BASE_URL = "https://ensembledata.com/apis"
-USER_AGENT = f"ensembledata-python/{__version__}"
+USER_AGENT = f"ensembledata-python/{version}"
 
 
 class EDErrorCode(IntEnum):
@@ -20,7 +20,6 @@ class EDErrorCode(IntEnum):
 
 def _handle_response(res: httpx.Response, *, return_top_level_data: bool) -> EDResponse:
     units_charged = res.headers.get("units_charged", 0)
-    print(res.headers)
     payload = res.json()
     assert isinstance(payload, dict)
 
