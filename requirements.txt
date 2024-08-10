@@ -1,2 +1,4 @@
 ruff==0.5.6
 mypy==1.11.1
+pytest==7.4.4
+pytest-asyncio=0.21.2

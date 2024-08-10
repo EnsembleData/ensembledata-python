@@ -44,8 +44,8 @@ Get started with the [TikTok API Guide](https://github.com/ensembledata/tiktok-s
 #### Instagram Guide
 Get started with the [Instagram API Guide](https://github.com/ensembledata/instagram-scraper). Find out which endpoints are available, and how you can use them with examples using the ensembledata python package.
 
-
-&nbsp;
+<br>
+<br>
 
 ### Missing Endpoints / Parameters
 
@@ -66,14 +66,15 @@ client = EDClient("API-TOKEN")
 result = client.instagram.user_info(username="...", extra_params={"baz": "..."})
 ```
 
-&nbsp;
+<br>
+<br>
 
 ### Handling Errors
 
 In the [API docs](https://ensembledata.com/apis/docs), each endpoint lists a handful of possible errors the API may respond with. You can handle these errors by catching the `EDError` exception. 
 
 ```python
-from ensembledata.api import EDClient, EDError
+from ensembledata.api import EDClient, EDError, errors
 
 
 client = EDClient("API-TOKEN")
@@ -82,11 +83,11 @@ try:
 except EDError as e:
 
     # Rate limit exceeded...
-    if e.status_code == 429:
+    if e.status_code == errors.STATUS_429_RATE_LIMIT_EXCEEDED:
         print(e.detail)
 
     # Subscription expired...
-    if e.status_code == 493:
+    if e.status_code == errors.STATUS_493_SUBSCRIPTION_EXPIRED:
         print(e.detail)
 
 except Exception as e:
@@ -97,8 +98,8 @@ except Exception as e:
     
 ```
 
-&nbsp;
-
+<br>
+<br>
 
 ### Async 
 
