@@ -9,6 +9,7 @@ import httpx
 from ._response import EDResponse
 from ._version import version
 from .errors import EDError
+from ._http import HttpClient, AsyncHttpClient, default_sync_client, default_async_client
 
 BASE_URL = "https://ensembledata.com/apis"
 USER_AGENT = f"ensembledata-python/{version}"
@@ -18,9 +19,10 @@ class EDErrorCode(IntEnum):
     TOKEN_NOT_FOUND = 491
 
 
-def _handle_response(res: httpx.Response, *, return_top_level_data: bool) -> EDResponse:
-    units_charged = res.headers.get("units_charged", 0)
-    payload = res.json()
+def _handle_response(
+    status_code: int, payload: Any, headers: Mapping[str, Any], *, return_top_level_data: bool
+) -> EDResponse:
+    units_charged = headers.get("units_charged", 0)
     assert isinstance(payload, dict)
 
     # In most cases there will only be a "data" field in the response if the status code is 2xx,
@@ -31,11 +33,11 @@ def _handle_response(res: httpx.Response, *, return_top_level_data: bool) -> EDR
         # There are a couple of endpoints that don't use a single top level "data" field, but
         # rather have multiple top level fields, for example "nextCursor".
         if return_top_level_data:
-            return EDResponse(res.status_code, payload, units_charged)
+            return EDResponse(status_code, payload, units_charged)
 
-        return EDResponse(res.status_code, payload.get("data"), units_charged)
+        return EDResponse(status_code, payload.get("data"), units_charged)
 
-    raise EDError(res.status_code, payload.get("detail"), units_charged)
+    raise EDError(status_code, payload.get("detail"), units_charged)
 
 
 def _check_token(token: str) -> None:
@@ -48,11 +50,19 @@ def _check_token(token: str) -> None:
 
 
 class Requester:
-    def __init__(self, token: str, *, timeout: float, max_network_retries: int):
+    def __init__(
+        self,
+        token: str,
+        *,
+        timeout: float,
+        max_network_retries: int,
+        http_client: HttpClient | None = None,
+    ):
         _check_token(token)
         self.token = token
         self.timeout = timeout
         self.max_network_retries = max_network_retries
+        self.http_client = http_client or default_sync_client(timeout=timeout)
 
     def get(
         self,
@@ -64,7 +74,7 @@ class Requester:
     ) -> EDResponse:
         for attempt in range(self.max_network_retries):
             try:
-                res = httpx.get(
+                status_code, payload, headers = self.http_client.get(
                     f"{BASE_URL}{url}",
                     params={"token": self.token, **params},
                     timeout=(self.timeout if timeout is None else timeout),
@@ -80,11 +90,19 @@ class Requester:
 
 
 class AsyncRequester:
-    def __init__(self, token: str, *, timeout: float, max_network_retries: int):
+    def __init__(
+        self,
+        token: str,
+        *,
+        timeout: int,
+        max_network_retries: int,
+        http_client: AsyncHttpClient | None = None,
+    ):
         _check_token(token)
         self.token = token
         self.timeout = timeout
         self.max_network_retries = max_network_retries
+        self.http_client = http_client or default_async_client(timeout=timeout)
 
     async def get(
         self,

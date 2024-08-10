@@ -3,6 +3,8 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING, Any, Mapping, Sequence
 
+from ._http import AsyncHttpClient
+
 if sys.version_info < (3, 8):
     from typing_extensions import Literal
 else:
@@ -949,7 +951,7 @@ class RedditEndpoints:
 class EDAsyncClient:
     def __init__(self, token: str, *, timeout: float = 600, max_network_retries: int = 3):
         self.requester = AsyncRequester(
-            token, timeout=timeout, max_network_retries=max_network_retries
+            token, timeout=timeout, max_network_retries=max_network_retries, http_client=http_client
         )
         self.customer = CustomerEndpoints(self.requester)
         self.tiktok = TiktokEndpoints(self.requester)
@@ -960,3 +962,6 @@ class EDAsyncClient:
 
     async def request(self, uri: str, params: Mapping[str, Any] | None = None) -> EDResponse:
         return await self.requester.get(uri, params=params or {})
+    
+    async def close(self):
+        await self.requester.http_client.close()

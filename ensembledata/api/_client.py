@@ -3,6 +3,8 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING, Any, Mapping, Sequence
 
+from ._http import HttpClient
+
 if sys.version_info < (3, 8):
     from typing_extensions import Literal
 else:
