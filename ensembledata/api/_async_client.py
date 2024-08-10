@@ -214,7 +214,6 @@ class EDTikTokAsync:
     async def post_info(
         self, *, url: str, extra_params: dict[str, Any] | None = None
     ) -> EDResponse:
-        # TODO: allow awemeid as param?
         params = {
             "url": url,
         }
@@ -223,10 +222,10 @@ class EDTikTokAsync:
         return await self.requester.get("/tt/post/info", params=params)
 
     async def multi_post_info(
-        self, *, post_ids: Sequence[str], extra_params: dict[str, Any] | None = None
+        self, *, aweme_ids: Sequence[str], extra_params: dict[str, Any] | None = None
     ) -> EDResponse:
         params = {
-            "ids": ";".join(post_ids),
+            "ids": ";".join(aweme_ids),
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -294,7 +293,7 @@ class EDTikTokAsync:
         extra_params: dict[str, Any] | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
-            "id": music_id,
+            "music_id": music_id,
         }
         if cursor is not None:
             params["cursor"] = cursor
@@ -723,7 +722,7 @@ class EDYoutubeAsync:
             params = {**extra_params, **params}
         return await self.requester.get("/youtube/channel/shorts", params=params)
 
-    async def video_or_short_details(
+    async def video_details(
         self,
         *,
         id: str,

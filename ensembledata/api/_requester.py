@@ -14,12 +14,10 @@ else:
 
 import httpx
 
-from .errors import EDError
 from ._response import EDResponse
+from .errors import EDError
 
 BASE_URL = "https://ensembledata.com/apis"
-
-VERSION_HEADER = "edpy-version"
 
 
 class EDErrorCode(IntEnum):
@@ -28,6 +26,7 @@ class EDErrorCode(IntEnum):
 
 def _handle_response(res: httpx.Response, *, return_top_level_data: bool) -> EDResponse:
     units_charged = res.headers.get("units_charged", 0)
+    print(res.headers)
     payload = res.json()
     assert isinstance(payload, dict)
 
@@ -88,7 +87,7 @@ class AsyncRequester:
         self.max_network_retries = max_network_retries
 
     async def get(
-        self, url: str, params: dict[str, Any], return_top_level_data: bool = False
+        self, url: str, params: dict[str, Any], *, return_top_level_data: bool = False
     ) -> EDResponse:
         async with httpx.AsyncClient(timeout=self.timeout) as client:
             for attempt in range(self.max_network_retries):
