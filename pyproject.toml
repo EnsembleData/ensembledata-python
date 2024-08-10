@@ -47,6 +47,9 @@ Homepage = "https://ensembledata.com"
 Documenation = "https://ensembledata.com/apis/docs"
 Repository = "https://github.com/ensembledata/ensembledata-python"
 
+[tool.mypy]
+strict = true
+
 [tool.ruff]
 target-version = "py37"
 line-length = 100

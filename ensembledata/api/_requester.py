@@ -7,8 +7,8 @@ from warnings import warn
 import httpx
 
 from ._response import EDResponse
-from .errors import EDError
 from ._version import version
+from .errors import EDError
 
 BASE_URL = "https://ensembledata.com/apis"
 USER_AGENT = f"ensembledata-python/{version}"
