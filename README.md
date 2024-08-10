@@ -1,6 +1,7 @@
 # EnsembleData Python API
 
 [![pypi](https://img.shields.io/pypi/v/ensembledata?color=%2334D058&label=pypi%20package)](https://pypi.org/project/ensembledata/)
+![](https://img.shields.io/pypi/pyversions/ensembledata.svg?color=%2334D058alt=%22Supported%20Python%20versions)
 
 ## Documentation
 
