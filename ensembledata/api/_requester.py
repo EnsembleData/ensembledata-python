@@ -1,23 +1,17 @@
 from __future__ import annotations
 
-import sys
 from enum import IntEnum
 from typing import Any
 from warnings import warn
-
-if sys.version_info >= (3, 8):
-    from importlib.metadata import version
-
-    VERSION = version("ensembledata")
-else:
-    VERSION = "unknown"
 
 import httpx
 
 from ._response import EDResponse
 from .errors import EDError
+from ..api import __version__
 
 BASE_URL = "https://ensembledata.com/apis"
+USER_AGENT = f"ensembledata-python/{__version__}"
 
 
 class EDErrorCode(IntEnum):
@@ -70,7 +64,7 @@ class Requester:
                     f"{BASE_URL}{url}",
                     params={"token": self.token, **params},
                     timeout=self.timeout,
-                    headers={"User-Agent": f"ensembledata-python-{VERSION}"},
+                    headers={"User-Agent": USER_AGENT},
                 )
                 return _handle_response(res, return_top_level_data=return_top_level_data)
             except httpx.RequestError as e:  # noqa: PERF203
@@ -95,7 +89,7 @@ class AsyncRequester:
                     res = await client.get(
                         f"{BASE_URL}{url}",
                         params={"token": self.token, **params},
-                        headers={"User-Agent": f"ensembledata-python-{VERSION}"},
+                        headers={"User-Agent": USER_AGENT},
                     )
                     return _handle_response(res, return_top_level_data=return_top_level_data)
                 except httpx.RequestError as e:  # noqa: PERF203
