@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import IntEnum
-from typing import Any
+from typing import Any, Mapping
 from warnings import warn
 
 import httpx
@@ -55,7 +55,7 @@ class Requester:
         self.max_network_retries = max_network_retries
 
     def get(
-        self, url: str, params: dict[str, Any], *, return_top_level_data: bool = False
+        self, url: str, params: Mapping[str, Any], *, return_top_level_data: bool = False
     ) -> EDResponse:
         for attempt in range(self.max_network_retries):
             try:
@@ -80,7 +80,7 @@ class AsyncRequester:
         self.max_network_retries = max_network_retries
 
     async def get(
-        self, url: str, params: dict[str, Any], *, return_top_level_data: bool = False
+        self, url: str, params: Mapping[str, Any], *, return_top_level_data: bool = False
     ) -> EDResponse:
         async with httpx.AsyncClient(timeout=self.timeout) as client:
             for attempt in range(self.max_network_retries):

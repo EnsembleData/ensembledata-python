@@ -1,0 +1,68 @@
+from __future__ import annotations
+
+import sys
+from typing import TYPE_CHECKING, Any, Mapping, Sequence
+
+if sys.version_info < (3, 8):
+    from typing_extensions import Literal
+else:
+    from typing import Literal
+
+from ._requester import {{ "Async" if async_methods else "" }}Requester
+
+if TYPE_CHECKING:
+    from ._response import EDResponse
+
+class UseDefault:
+    pass
+
+USE_DEFAULT = UseDefault()
+
+{% for key, endpoints in tags.items() %}
+class {{ key }}Endpoints:
+
+    def __init__(self, requester: {{ "Async" if async_methods else "" }}Requester):
+        self.requester = requester
+
+    {% for x in endpoints %}
+    {{ "async " if async_methods else "" }}def {{ x.function_name }}(
+        self,
+        *,
+        {% for item in x.params %}
+        {% if item.required %}
+        {{ item.name }}: {{ item.type }},
+        {% else %}
+        {{ item.name }}: {{ item.type }} | UseDefault = USE_DEFAULT,
+        {% endif %}
+        {% endfor %}        
+        extra_params: Mapping[str, Any] | None = None,
+    ) -> EDResponse:
+        params: dict[str, Any] = {
+        {% for item in x.params %}
+        {% if item.transform == "join_with_semicolon" %}
+            "{{ item.param }}": ";".join({{ item.name }}),
+        {% else %}
+            "{{ item.param }}": {{ item.name }},
+        {% endif %}
+        {% endfor %}
+        }
+        if extra_params is not None:
+            params = {**extra_params, **params}
+        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
+        return {{ "await " if async_methods else "" }}self.requester.get("{{ x.path }}", params=params{{ ", return_top_level_data=True" if x.return_top_level_data else "" }}) 
+    
+    {% endfor %}
+
+{% endfor %}
+
+class ED{{ "Async" if async_methods else "" }}Client:
+    def __init__(self, token: str, *, timeout: int = 600, max_network_retries: int = 3):
+        self.requester = {{ "Async" if async_methods else "" }}Requester(
+            token, timeout=timeout, max_network_retries=max_network_retries
+        )
+        {% for tag in tags %}
+        self.{{ tag|lower }} = {{ tag }}Endpoints(self.requester)
+        {% endfor %}
+
+    async def request(self, uri: str, params: Mapping[str, Any] | None = None) -> EDResponse:
+        return {{ "await " if async_methods else "" }}self.requester.get(uri, params=params or {})

@@ -1,7 +1,7 @@
 # EnsembleData Python API
 
 [![pypi](https://img.shields.io/pypi/v/ensembledata?color=%2334D058&label=pypi%20package)](https://pypi.org/project/ensembledata/)
-![](https://img.shields.io/pypi/pyversions/ensembledata.svg?color=%2334D058)
+[![pypi](https://img.shields.io/pypi/pyversions/ensembledata.svg)](https://pypi.org/project/ensembledata/)
 
 ## Documentation
 
@@ -28,7 +28,7 @@ from ensembledata.api import EDClient
 
 
 client = EDClient("API-TOKEN")
-result = client.tiktok.user_info_from_username("daviddobrik")
+result = client.tiktok.user_info_from_username(username="daviddobrik")
 
 print("Data: ", result.data)
 print("Units charged:", result.units_charged)
@@ -79,7 +79,7 @@ from ensembledata.api import EDClient, EDError, errors
 
 client = EDClient("API-TOKEN")
 try:
-    result = client.tiktok.user_info_from_username("daviddobrik")
+    result = client.tiktok.user_info_from_username(username="daviddobrik")
 except EDError as e:
 
     # Rate limit exceeded...
@@ -113,7 +113,7 @@ from ensembledata.api import EDAsyncClient
 
 async def main():
     client = EDAsyncClient("API-TOKEN")
-    result = await client.tiktok.user_info_from_username("daviddobrik")
+    result = await client.tiktok.user_info_from_username(username="daviddobrik")
 
 if __name__ == "__main__":
     asyncio.run(main())
