@@ -30,6 +30,7 @@ class CustomerEndpoints:
         *,
         date: str,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "date": date,
@@ -37,13 +38,14 @@ class CustomerEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/customer/get-used-units", params=params)
+        return await self.requester.get("/customer/get-used-units", params=params, timeout=timeout)
 
     async def get_usage_history(
         self,
         *,
         days: int,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "days": days,
@@ -51,7 +53,7 @@ class CustomerEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/customer/get-history", params=params)
+        return await self.requester.get("/customer/get-history", params=params, timeout=timeout)
 
 
 class TiktokEndpoints:
@@ -64,6 +66,7 @@ class TiktokEndpoints:
         hashtag: str,
         cursor: int | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "name": hashtag,
@@ -72,7 +75,7 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/hashtag/posts", params=params)
+        return await self.requester.get("/tt/hashtag/posts", params=params, timeout=timeout)
 
     async def full_hashtag_search(
         self,
@@ -82,6 +85,7 @@ class TiktokEndpoints:
         remap_output: bool | UseDefault = USE_DEFAULT,
         max_cursor: int | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "name": hashtag,
@@ -92,7 +96,7 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/hashtag/recent-posts", params=params)
+        return await self.requester.get("/tt/hashtag/recent-posts", params=params, timeout=timeout)
 
     async def keyword_search(
         self,
@@ -100,11 +104,12 @@ class TiktokEndpoints:
         keyword: str,
         cursor: int | UseDefault = USE_DEFAULT,
         period: Literal["0", "1", "7", "30", "90", "180"],
-        sorting: Literal["0", "1"],
+        sorting: Literal["0", "1"] | UseDefault = USE_DEFAULT,
         country: str | UseDefault = USE_DEFAULT,
         match_exactly: bool | UseDefault = USE_DEFAULT,
         get_author_stats: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "name": keyword,
@@ -118,7 +123,7 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/keyword/search", params=params)
+        return await self.requester.get("/tt/keyword/search", params=params, timeout=timeout)
 
     async def full_keyword_search(
         self,
@@ -129,6 +134,7 @@ class TiktokEndpoints:
         country: str | UseDefault = USE_DEFAULT,
         match_exactly: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "name": keyword,
@@ -140,7 +146,7 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/keyword/full-search", params=params)
+        return await self.requester.get("/tt/keyword/full-search", params=params, timeout=timeout)
 
     async def user_posts_from_username(
         self,
@@ -151,6 +157,7 @@ class TiktokEndpoints:
         oldest_createtime: int | UseDefault = USE_DEFAULT,
         alternative_method: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "username": username,
@@ -162,7 +169,9 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/user/posts", params=params, return_top_level_data=True)
+        return await self.requester.get(
+            "/tt/user/posts", params=params, timeout=timeout, return_top_level_data=True
+        )
 
     async def user_posts_from_secuid(
         self,
@@ -173,6 +182,7 @@ class TiktokEndpoints:
         oldest_createtime: int | UseDefault = USE_DEFAULT,
         alternative_method: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "secUid": sec_uid,
@@ -185,7 +195,7 @@ class TiktokEndpoints:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
         return await self.requester.get(
-            "/tt/user/posts-from-secuid", params=params, return_top_level_data=True
+            "/tt/user/posts-from-secuid", params=params, timeout=timeout, return_top_level_data=True
         )
 
     async def user_info_from_username(
@@ -193,6 +203,7 @@ class TiktokEndpoints:
         *,
         username: str,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "username": username,
@@ -200,7 +211,7 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/user/info", params=params)
+        return await self.requester.get("/tt/user/info", params=params, timeout=timeout)
 
     async def user_info_from_secuid(
         self,
@@ -208,6 +219,7 @@ class TiktokEndpoints:
         sec_uid: str,
         alternative_method: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "secUid": sec_uid,
@@ -216,7 +228,7 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/user/info-from-secuid", params=params)
+        return await self.requester.get("/tt/user/info-from-secuid", params=params, timeout=timeout)
 
     async def user_search(
         self,
@@ -224,6 +236,7 @@ class TiktokEndpoints:
         keyword: str,
         cursor: int | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "keyword": keyword,
@@ -232,13 +245,14 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/user/search", params=params)
+        return await self.requester.get("/tt/user/search", params=params, timeout=timeout)
 
     async def post_info(
         self,
         *,
         url: str,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "url": url,
@@ -246,13 +260,14 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/post/info", params=params)
+        return await self.requester.get("/tt/post/info", params=params, timeout=timeout)
 
     async def multi_post_info(
         self,
         *,
         aweme_ids: Sequence[str],
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "ids": ";".join(aweme_ids),
@@ -260,7 +275,7 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/post/multi-info", params=params)
+        return await self.requester.get("/tt/post/multi-info", params=params, timeout=timeout)
 
     async def post_comments(
         self,
@@ -268,6 +283,7 @@ class TiktokEndpoints:
         aweme_id: str,
         cursor: int | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "aweme_id": aweme_id,
@@ -276,7 +292,7 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/post/comments", params=params)
+        return await self.requester.get("/tt/post/comments", params=params, timeout=timeout)
 
     async def post_comment_replies(
         self,
@@ -285,6 +301,7 @@ class TiktokEndpoints:
         comment_id: str,
         cursor: int | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "aweme_id": aweme_id,
@@ -294,16 +311,17 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/post/comments-replies", params=params)
+        return await self.requester.get("/tt/post/comments-replies", params=params, timeout=timeout)
 
     async def music_search(
         self,
         *,
         keyword: str,
         cursor: int | UseDefault = USE_DEFAULT,
-        sorting: Literal["0", "1", "2", "3", "4"],
-        filter_by: Literal["0", "1", "2"],
+        sorting: Literal["0", "1", "2", "3", "4"] | UseDefault = USE_DEFAULT,
+        filter_by: Literal["0", "1", "2"] | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "name": keyword,
@@ -314,7 +332,7 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/music/info", params=params)
+        return await self.requester.get("/tt/music/info", params=params, timeout=timeout)
 
     async def music_posts(
         self,
@@ -322,6 +340,7 @@ class TiktokEndpoints:
         music_id: str,
         cursor: int | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "music_id": music_id,
@@ -330,13 +349,14 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/music/posts", params=params)
+        return await self.requester.get("/tt/music/posts", params=params, timeout=timeout)
 
     async def music_details(
         self,
         *,
         music_id: str,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "id": music_id,
@@ -344,7 +364,7 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/music/details", params=params)
+        return await self.requester.get("/tt/music/details", params=params, timeout=timeout)
 
     async def user_followers(
         self,
@@ -353,6 +373,7 @@ class TiktokEndpoints:
         sec_uid: str,
         cursor: int | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "id": id,
@@ -362,7 +383,7 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/user/followers", params=params)
+        return await self.requester.get("/tt/user/followers", params=params, timeout=timeout)
 
     async def user_followings(
         self,
@@ -372,6 +393,7 @@ class TiktokEndpoints:
         cursor: int | UseDefault = USE_DEFAULT,
         page_token: str | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "id": id,
@@ -382,7 +404,7 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/user/followings", params=params)
+        return await self.requester.get("/tt/user/followings", params=params, timeout=timeout)
 
     async def user_liked_posts(
         self,
@@ -390,6 +412,7 @@ class TiktokEndpoints:
         sec_uid: str,
         cursor: int | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "secUid": sec_uid,
@@ -398,7 +421,7 @@ class TiktokEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/tt/user/liked-posts", params=params)
+        return await self.requester.get("/tt/user/liked-posts", params=params, timeout=timeout)
 
 
 class YoutubeEndpoints:
@@ -416,6 +439,7 @@ class YoutubeEndpoints:
         sorting: Literal["relevance", "time", "views", "rating"] | UseDefault = USE_DEFAULT,
         get_additional_info: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "keyword": keyword,
@@ -428,13 +452,14 @@ class YoutubeEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/youtube/search", params=params)
+        return await self.requester.get("/youtube/search", params=params, timeout=timeout)
 
     async def featured_categories_search(
         self,
         *,
         keyword: str,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "name": keyword,
@@ -442,7 +467,9 @@ class YoutubeEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/youtube/search/featured-categories", params=params)
+        return await self.requester.get(
+            "/youtube/search/featured-categories", params=params, timeout=timeout
+        )
 
     async def hashtag_search(
         self,
@@ -451,6 +478,7 @@ class YoutubeEndpoints:
         depth: int,
         only_shorts: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "name": hashtag,
@@ -460,7 +488,7 @@ class YoutubeEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/youtube/hashtag/search", params=params)
+        return await self.requester.get("/youtube/hashtag/search", params=params, timeout=timeout)
 
     async def channel_detailed_info(
         self,
@@ -468,6 +496,7 @@ class YoutubeEndpoints:
         channel_id: str,
         from_url: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "browseId": channel_id,
@@ -476,7 +505,9 @@ class YoutubeEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/youtube/channel/detailed-info", params=params)
+        return await self.requester.get(
+            "/youtube/channel/detailed-info", params=params, timeout=timeout
+        )
 
     async def channel_videos(
         self,
@@ -484,6 +515,7 @@ class YoutubeEndpoints:
         channel_id: str,
         depth: int,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "browseId": channel_id,
@@ -492,7 +524,7 @@ class YoutubeEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/youtube/channel/videos", params=params)
+        return await self.requester.get("/youtube/channel/videos", params=params, timeout=timeout)
 
     async def channel_shorts(
         self,
@@ -500,6 +532,7 @@ class YoutubeEndpoints:
         channel_id: str,
         depth: int,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "browseId": channel_id,
@@ -508,7 +541,7 @@ class YoutubeEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/youtube/channel/shorts", params=params)
+        return await self.requester.get("/youtube/channel/shorts", params=params, timeout=timeout)
 
     async def video_details(
         self,
@@ -517,6 +550,7 @@ class YoutubeEndpoints:
         alternative_method: bool | UseDefault = USE_DEFAULT,
         get_subscribers_count: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "id": id,
@@ -526,13 +560,16 @@ class YoutubeEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/youtube/channel/get-short-stats", params=params)
+        return await self.requester.get(
+            "/youtube/channel/get-short-stats", params=params, timeout=timeout
+        )
 
     async def channel_subscribers(
         self,
         *,
         channel_id: str,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "browseId": channel_id,
@@ -540,13 +577,16 @@ class YoutubeEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/youtube/channel/followers", params=params)
+        return await self.requester.get(
+            "/youtube/channel/followers", params=params, timeout=timeout
+        )
 
     async def channel_username_to_id(
         self,
         *,
         username: str,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "name": username,
@@ -554,13 +594,16 @@ class YoutubeEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/youtube/channel/name-to-id", params=params)
+        return await self.requester.get(
+            "/youtube/channel/name-to-id", params=params, timeout=timeout
+        )
 
     async def channel_id_to_username(
         self,
         *,
         channel_id: str,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "browseId": channel_id,
@@ -568,7 +611,9 @@ class YoutubeEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/youtube/channel/id-to-name", params=params)
+        return await self.requester.get(
+            "/youtube/channel/id-to-name", params=params, timeout=timeout
+        )
 
     async def music_id_to_shorts(
         self,
@@ -576,6 +621,7 @@ class YoutubeEndpoints:
         music_id: str,
         depth: int | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "id": music_id,
@@ -584,7 +630,9 @@ class YoutubeEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/youtube/music/id-to-shorts", params=params)
+        return await self.requester.get(
+            "/youtube/music/id-to-shorts", params=params, timeout=timeout
+        )
 
     async def video_comments(
         self,
@@ -592,6 +640,7 @@ class YoutubeEndpoints:
         id: str,
         cursor: str | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "id": id,
@@ -600,7 +649,7 @@ class YoutubeEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/youtube/video/comments", params=params)
+        return await self.requester.get("/youtube/video/comments", params=params, timeout=timeout)
 
 
 class InstagramEndpoints:
@@ -617,6 +666,7 @@ class InstagramEndpoints:
         cursor: str | UseDefault = USE_DEFAULT,
         alternative_method: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "user_id": user_id,
@@ -629,13 +679,14 @@ class InstagramEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/instagram/user/posts", params=params)
+        return await self.requester.get("/instagram/user/posts", params=params, timeout=timeout)
 
     async def user_basic_stats(
         self,
         *,
         user_id: int,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "user_id": user_id,
@@ -643,13 +694,16 @@ class InstagramEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/instagram/user/basic-info", params=params)
+        return await self.requester.get(
+            "/instagram/user/basic-info", params=params, timeout=timeout
+        )
 
     async def user_info(
         self,
         *,
         username: str,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "username": username,
@@ -657,13 +711,14 @@ class InstagramEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/instagram/user/info", params=params)
+        return await self.requester.get("/instagram/user/info", params=params, timeout=timeout)
 
     async def user_detailed_info(
         self,
         *,
         username: str,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "username": username,
@@ -671,13 +726,16 @@ class InstagramEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/instagram/user/detailed-info", params=params)
+        return await self.requester.get(
+            "/instagram/user/detailed-info", params=params, timeout=timeout
+        )
 
     async def user_followers(
         self,
         *,
         user_id: int,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "user_id": user_id,
@@ -685,7 +743,7 @@ class InstagramEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/instagram/user/followers", params=params)
+        return await self.requester.get("/instagram/user/followers", params=params, timeout=timeout)
 
     async def user_reels(
         self,
@@ -697,6 +755,7 @@ class InstagramEndpoints:
         cursor: str | UseDefault = USE_DEFAULT,
         chunk_size: int | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "user_id": user_id,
@@ -709,7 +768,7 @@ class InstagramEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/instagram/user/reels", params=params)
+        return await self.requester.get("/instagram/user/reels", params=params, timeout=timeout)
 
     async def user_tagged_posts(
         self,
@@ -718,6 +777,7 @@ class InstagramEndpoints:
         cursor: str | UseDefault = USE_DEFAULT,
         chunk_size: int | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "user_id": user_id,
@@ -727,7 +787,9 @@ class InstagramEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/instagram/user/tagged-posts", params=params)
+        return await self.requester.get(
+            "/instagram/user/tagged-posts", params=params, timeout=timeout
+        )
 
     async def post_info_and_comments(
         self,
@@ -735,6 +797,7 @@ class InstagramEndpoints:
         code: str,
         num_comments: int | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "code": code,
@@ -743,7 +806,7 @@ class InstagramEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/instagram/post/details", params=params)
+        return await self.requester.get("/instagram/post/details", params=params, timeout=timeout)
 
     async def hashtag_posts(
         self,
@@ -754,6 +817,7 @@ class InstagramEndpoints:
         get_author_info: bool | UseDefault = USE_DEFAULT,
         alternative_method: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "name": hashtag,
@@ -765,7 +829,7 @@ class InstagramEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/instagram/hashtag/posts", params=params)
+        return await self.requester.get("/instagram/hashtag/posts", params=params, timeout=timeout)
 
     async def music_posts(
         self,
@@ -773,6 +837,7 @@ class InstagramEndpoints:
         music_id: str,
         cursor: str | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "id": music_id,
@@ -781,13 +846,14 @@ class InstagramEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/instagram/music/posts", params=params)
+        return await self.requester.get("/instagram/music/posts", params=params, timeout=timeout)
 
     async def search(
         self,
         *,
         text: str,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "text": text,
@@ -795,7 +861,7 @@ class InstagramEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/instagram/search", params=params)
+        return await self.requester.get("/instagram/search", params=params, timeout=timeout)
 
 
 class TwitchEndpoints:
@@ -809,6 +875,7 @@ class TwitchEndpoints:
         depth: int,
         type: Literal["videos", "channels", "games"],
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "keyword": keyword,
@@ -818,13 +885,14 @@ class TwitchEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/twitch/search", params=params)
+        return await self.requester.get("/twitch/search", params=params, timeout=timeout)
 
     async def user_followers(
         self,
         *,
         username: str,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "username": username,
@@ -832,7 +900,7 @@ class TwitchEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/twitch/user/followers", params=params)
+        return await self.requester.get("/twitch/user/followers", params=params, timeout=timeout)
 
 
 class RedditEndpoints:
@@ -847,6 +915,7 @@ class RedditEndpoints:
         period: Literal["hour", "day", "week", "month", "year", "all"],
         cursor: str | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "name": name,
@@ -857,7 +926,7 @@ class RedditEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/reddit/subreddit/posts", params=params)
+        return await self.requester.get("/reddit/subreddit/posts", params=params, timeout=timeout)
 
     async def post_comments(
         self,
@@ -865,6 +934,7 @@ class RedditEndpoints:
         id: str,
         cursor: str | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "id": id,
@@ -873,11 +943,11 @@ class RedditEndpoints:
         if extra_params is not None:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/reddit/post/comments", params=params)
+        return await self.requester.get("/reddit/post/comments", params=params, timeout=timeout)
 
 
 class EDAsyncClient:
-    def __init__(self, token: str, *, timeout: int = 600, max_network_retries: int = 3):
+    def __init__(self, token: str, *, timeout: float = 600, max_network_retries: int = 3):
         self.requester = AsyncRequester(
             token, timeout=timeout, max_network_retries=max_network_retries
         )

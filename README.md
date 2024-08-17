@@ -119,6 +119,31 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+### Network Retries
+
+By default the `EDClient` will perform 3 retries when it encounters network issues. If you would like to customise this behaviour, you can pass in the `max_network_retries` param as show below:
+
+Note: if the request times out, it will not be retried.
+
+```python
+from ensembledata.api import EDClient
+
+client = EDClient("API-TOKEN", max_network_retries=5)
+```
+
+### Configure Timeout
+
+If you would like control over the read timeout, you can configure this either for all request by setting `timeout` when creating the `EDClient`, or you can specify the `timeout` per request, on any of the individual methods as shown below:
+
+Note: the timeout is specified in seconds.
+
+```python
+from ensembledata.api import EDClient
+
+client = EDClient("API-TOKEN", timeout=120)
+result = client.tiktok.user_info_from_username(username="daviddobrik", timeout=10)
+```
+
 ### Types
 
 The package uses type hints, and is type checked with the latest version of `mypy`. If you experience any type checking related issues with the package, please let us know by creating an issue.

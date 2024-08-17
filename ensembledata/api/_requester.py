@@ -48,41 +48,55 @@ def _check_token(token: str) -> None:
 
 
 class Requester:
-    def __init__(self, token: str, *, timeout: int, max_network_retries: int):
+    def __init__(self, token: str, *, timeout: float, max_network_retries: int):
         _check_token(token)
         self.token = token
         self.timeout = timeout
         self.max_network_retries = max_network_retries
 
     def get(
-        self, url: str, params: Mapping[str, Any], *, return_top_level_data: bool = False
+        self,
+        url: str,
+        params: Mapping[str, Any],
+        *,
+        timeout: float | None = None,
+        return_top_level_data: bool = False,
     ) -> EDResponse:
         for attempt in range(self.max_network_retries):
             try:
                 res = httpx.get(
                     f"{BASE_URL}{url}",
                     params={"token": self.token, **params},
-                    timeout=self.timeout,
+                    timeout=(self.timeout if timeout is None else timeout),
                     headers={"User-Agent": USER_AGENT},
                 )
                 return _handle_response(res, return_top_level_data=return_top_level_data)
             except httpx.RequestError as e:  # noqa: PERF203
+                if isinstance(e, httpx.ReadTimeout):
+                    raise
                 if attempt == self.max_network_retries - 1:
                     raise e
         raise AssertionError("unreachable")
 
 
 class AsyncRequester:
-    def __init__(self, token: str, *, timeout: int, max_network_retries: int):
+    def __init__(self, token: str, *, timeout: float, max_network_retries: int):
         _check_token(token)
         self.token = token
         self.timeout = timeout
         self.max_network_retries = max_network_retries
 
     async def get(
-        self, url: str, params: Mapping[str, Any], *, return_top_level_data: bool = False
+        self,
+        url: str,
+        params: Mapping[str, Any],
+        *,
+        timeout: float | None = None,
+        return_top_level_data: bool = False,
     ) -> EDResponse:
-        async with httpx.AsyncClient(timeout=self.timeout) as client:
+        async with httpx.AsyncClient(
+            timeout=(self.timeout if timeout is None else timeout)
+        ) as client:
             for attempt in range(self.max_network_retries):
                 try:
                     res = await client.get(
@@ -92,6 +106,8 @@ class AsyncRequester:
                     )
                     return _handle_response(res, return_top_level_data=return_top_level_data)
                 except httpx.RequestError as e:  # noqa: PERF203
+                    if isinstance(e, httpx.ReadTimeout):
+                        raise
                     if attempt == self.max_network_retries - 1:
                         raise e
         raise AssertionError("unreachable")
