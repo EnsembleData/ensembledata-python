@@ -19,7 +19,7 @@ authors = [
 dynamic = ["version"]
 readme = "README.md"
 description = "Python bindings for the EnsembleData API"
-dependencies = ["httpx", "typing-extensions; python_version == '3.7'" ]
+dependencies = [ "typing-extensions; python_version == '3.7'" ]
 requires-python = ">= 3.7"
 license = { text = "LICENCE" }
 keywords = ["ensembledata api", "tiktok api", "instagram api", "youtube api", "reddit api"]

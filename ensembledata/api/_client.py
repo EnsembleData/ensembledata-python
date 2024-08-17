@@ -3,8 +3,6 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING, Any, Mapping, Sequence
 
-from ._http import HttpClient
-
 if sys.version_info < (3, 8):
     from typing_extensions import Literal
 else:
@@ -13,6 +11,7 @@ else:
 from ._requester import Requester
 
 if TYPE_CHECKING:
+    from ._http import HttpClient
     from ._response import EDResponse
 
 
@@ -933,8 +932,20 @@ class RedditEndpoints:
 
 
 class EDClient:
-    def __init__(self, token: str, *, timeout: float = 600, max_network_retries: int = 3):
-        self.requester = Requester(token, timeout=timeout, max_network_retries=max_network_retries)
+    def __init__(
+        self,
+        token: str,
+        *,
+        timeout: float = 600,
+        max_network_retries: int = 3,
+        http_client: HttpClient | None = None,
+    ):
+        self.requester = Requester(
+            token,
+            timeout=timeout,
+            max_network_retries=max_network_retries,
+            http_client=http_client,
+        )
         self.customer = CustomerEndpoints(self.requester)
         self.tiktok = TiktokEndpoints(self.requester)
         self.youtube = YoutubeEndpoints(self.requester)
@@ -942,5 +953,8 @@ class EDClient:
         self.twitch = TwitchEndpoints(self.requester)
         self.reddit = RedditEndpoints(self.requester)
 
-    async def request(self, uri: str, params: Mapping[str, Any] | None = None) -> EDResponse:
+    def request(self, uri: str, params: Mapping[str, Any] | None = None) -> EDResponse:
         return self.requester.get(uri, params=params or {})
+
+    def close(self):
+        self.requester.http_client.close()

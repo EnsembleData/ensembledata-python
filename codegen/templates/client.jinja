@@ -11,6 +11,7 @@ else:
 from ._requester import {{ "Async" if async_methods else "" }}Requester
 
 if TYPE_CHECKING:
+    from ._http import {{ "Async" if async_methods else "" }}HttpClient
     from ._response import EDResponse
 
 class UseDefault:
@@ -57,13 +58,26 @@ class {{ key }}Endpoints:
 {% endfor %}
 
 class ED{{ "Async" if async_methods else "" }}Client:
-    def __init__(self, token: str, *, timeout: float = 600, max_network_retries: int = 3):
+    def __init__(
+        self, 
+        token: str, 
+        *, 
+        timeout: float = 600, 
+        max_network_retries: int = 3, 
+        http_client: {{ "Async" if async_methods else "" }}HttpClient | None = None,
+    ):
         self.requester = {{ "Async" if async_methods else "" }}Requester(
-            token, timeout=timeout, max_network_retries=max_network_retries
+            token, 
+            timeout=timeout, 
+            max_network_retries=max_network_retries,
+            http_client=http_client,
         )
         {% for tag in tags %}
         self.{{ tag|lower }} = {{ tag }}Endpoints(self.requester)
         {% endfor %}
 
-    async def request(self, uri: str, params: Mapping[str, Any] | None = None) -> EDResponse:
+    {{ "async " if async_methods else "" }}def request(self, uri: str, params: Mapping[str, Any] | None = None) -> EDResponse:
         return {{ "await " if async_methods else "" }}self.requester.get(uri, params=params or {})
+
+    {{ "async " if async_methods else "" }}def close(self):
+        {{ "await " if async_methods else "" }}self.requester.http_client.close()

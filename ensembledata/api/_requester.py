@@ -1,22 +1,21 @@
 from __future__ import annotations
 
-from enum import IntEnum
 from typing import Any, Mapping
 from warnings import warn
 
-import httpx
-
+from ._http import (
+    AsyncHttpClient,
+    HttpClient,
+    RetryableError,
+    default_async_client,
+    default_sync_client,
+)
 from ._response import EDResponse
 from ._version import version
 from .errors import EDError
-from ._http import HttpClient, AsyncHttpClient, default_sync_client, default_async_client
 
 BASE_URL = "https://ensembledata.com/apis"
 USER_AGENT = f"ensembledata-python/{version}"
-
-
-class EDErrorCode(IntEnum):
-    TOKEN_NOT_FOUND = 491
 
 
 def _handle_response(
@@ -63,6 +62,7 @@ class Requester:
         self.timeout = timeout
         self.max_network_retries = max_network_retries
         self.http_client = http_client or default_sync_client(timeout=timeout)
+        print(self.http_client)
 
     def get(
         self,
@@ -77,13 +77,13 @@ class Requester:
                 status_code, payload, headers = self.http_client.get(
                     f"{BASE_URL}{url}",
                     params={"token": self.token, **params},
-                    timeout=(self.timeout if timeout is None else timeout),
+                    timeout=timeout,
                     headers={"User-Agent": USER_AGENT},
                 )
-                return _handle_response(res, return_top_level_data=return_top_level_data)
-            except httpx.RequestError as e:  # noqa: PERF203
-                if isinstance(e, httpx.ReadTimeout):
-                    raise
+                return _handle_response(
+                    status_code, payload, headers, return_top_level_data=return_top_level_data
+                )
+            except RetryableError as e:  # noqa: PERF203
                 if attempt == self.max_network_retries - 1:
                     raise e
         raise AssertionError("unreachable")
@@ -94,7 +94,7 @@ class AsyncRequester:
         self,
         token: str,
         *,
-        timeout: int,
+        timeout: float,
         max_network_retries: int,
         http_client: AsyncHttpClient | None = None,
     ):
@@ -112,20 +112,16 @@ class AsyncRequester:
         timeout: float | None = None,
         return_top_level_data: bool = False,
     ) -> EDResponse:
-        async with httpx.AsyncClient(
-            timeout=(self.timeout if timeout is None else timeout)
-        ) as client:
-            for attempt in range(self.max_network_retries):
-                try:
-                    res = await client.get(
-                        f"{BASE_URL}{url}",
-                        params={"token": self.token, **params},
-                        headers={"User-Agent": USER_AGENT},
-                    )
-                    return _handle_response(res, return_top_level_data=return_top_level_data)
-                except httpx.RequestError as e:  # noqa: PERF203
-                    if isinstance(e, httpx.ReadTimeout):
-                        raise
-                    if attempt == self.max_network_retries - 1:
-                        raise e
+        for attempt in range(self.max_network_retries):
+            try:
+                res = await self.http_client.get(
+                    f"{BASE_URL}{url}",
+                    params={"token": self.token, **params},
+                    headers={"User-Agent": USER_AGENT},
+                    timeout=timeout,
+                )
+                return _handle_response(*res, return_top_level_data=return_top_level_data)
+            except RetryableError as e:  # noqa: PERF203
+                if attempt == self.max_network_retries - 1:
+                    raise e
         raise AssertionError("unreachable")
