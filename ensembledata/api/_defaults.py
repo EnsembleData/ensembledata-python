@@ -1,0 +1,7 @@
+class UseDefault:
+    pass
+
+
+USE_DEFAULT = UseDefault()
+DEFAULT_TIMEOUT = 600
+DEFAULT_MAX_NETWORK_RETRIES = 3

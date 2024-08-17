@@ -8,18 +8,12 @@ if sys.version_info < (3, 8):
 else:
     from typing import Literal
 
+from ._defaults import DEFAULT_MAX_NETWORK_RETRIES, DEFAULT_TIMEOUT, USE_DEFAULT, UseDefault
 from ._requester import Requester
 
 if TYPE_CHECKING:
     from ._http import HttpClient
     from ._response import EDResponse
-
-
-class UseDefault:
-    pass
-
-
-USE_DEFAULT = UseDefault()
 
 
 class CustomerEndpoints:
@@ -936,8 +930,8 @@ class EDClient:
         self,
         token: str,
         *,
-        timeout: float = 600,
-        max_network_retries: int = 3,
+        timeout: float = DEFAULT_TIMEOUT,
+        max_network_retries: int = DEFAULT_MAX_NETWORK_RETRIES,
         http_client: HttpClient | None = None,
     ):
         self.requester = Requester(

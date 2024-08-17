@@ -4,6 +4,8 @@ import socket
 import sys
 from typing import Any, Mapping
 
+from ._defaults import DEFAULT_TIMEOUT
+
 if sys.version_info < (3, 8):
     from typing_extensions import Protocol
 else:
@@ -63,10 +65,7 @@ class AsyncHttpClient(Protocol):
     async def close(self): ...
 
 
-DEFAULT_TIMEOUT = 600
-
-
-def default_async_client(timeout: float = DEFAULT_TIMEOUT):
+def default_async_client(timeout: float):
     if httpx:
         return HttpxAsyncClient(timeout=timeout)
     if aiohttp:
@@ -78,7 +77,7 @@ def default_async_client(timeout: float = DEFAULT_TIMEOUT):
     )
 
 
-def default_sync_client(timeout: float = DEFAULT_TIMEOUT):
+def default_sync_client(timeout: float):
     if httpx:
         return HttpxClient(timeout=timeout)
     if requests:

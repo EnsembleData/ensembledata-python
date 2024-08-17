@@ -8,16 +8,13 @@ if sys.version_info < (3, 8):
 else:
     from typing import Literal
 
+from ._defaults import DEFAULT_MAX_NETWORK_RETRIES, DEFAULT_TIMEOUT, USE_DEFAULT, UseDefault
 from ._requester import {{ "Async" if async_methods else "" }}Requester
 
 if TYPE_CHECKING:
     from ._http import {{ "Async" if async_methods else "" }}HttpClient
     from ._response import EDResponse
 
-class UseDefault:
-    pass
-
-USE_DEFAULT = UseDefault()
 
 {% for key, endpoints in tags.items() %}
 class {{ key }}Endpoints:
@@ -62,8 +59,8 @@ class ED{{ "Async" if async_methods else "" }}Client:
         self, 
         token: str, 
         *, 
-        timeout: float = 600, 
-        max_network_retries: int = 3, 
+        timeout: float = DEFAULT_TIMEOUT, 
+        max_network_retries: int = DEFAULT_MAX_NETWORK_RETRIES, 
         http_client: {{ "Async" if async_methods else "" }}HttpClient | None = None,
     ):
         self.requester = {{ "Async" if async_methods else "" }}Requester(

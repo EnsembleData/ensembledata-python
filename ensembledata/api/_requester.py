@@ -62,7 +62,6 @@ class Requester:
         self.timeout = timeout
         self.max_network_retries = max_network_retries
         self.http_client = http_client or default_sync_client(timeout=timeout)
-        print(self.http_client)
 
     def get(
         self,
