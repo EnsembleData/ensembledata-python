@@ -950,5 +950,5 @@ class EDClient:
     def request(self, uri: str, params: Mapping[str, Any] | None = None) -> EDResponse:
         return self.requester.get(uri, params=params or {})
 
-    def close(self):
+    def close(self) -> None:
         self.requester.http_client.close()
