@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import socket
 import sys
-from typing import Any, Mapping
+from typing import TYPE_CHECKING, Any, Mapping
 
 from ._defaults import DEFAULT_TIMEOUT
 
@@ -30,6 +30,9 @@ import json
 import urllib.error
 import urllib.parse
 import urllib.request
+
+if TYPE_CHECKING:
+    from collections.abc import MutableMapping
 
 
 class RetryableError(Exception):
@@ -86,8 +89,12 @@ def default_sync_client(timeout: float):
 
 
 class UrllibClient(HttpClient):
-    def __init__(self, timeout: float = DEFAULT_TIMEOUT):
+    def __init__(self, timeout: float = DEFAULT_TIMEOUT, proxies: dict[str, str] | None = None):
         self._timeout = timeout
+        self._opener = None
+        if proxies is not None:
+            proxy_handler = urllib.request.ProxyHandler(proxies)
+            self._opener = urllib.request.build_opener(proxy_handler)
 
     def get(
         self,
@@ -100,7 +107,8 @@ class UrllibClient(HttpClient):
         req = urllib.request.Request(url, method="GET", headers=dict(headers))
         timeout = self._timeout if timeout is None else timeout
         try:
-            with urllib.request.urlopen(req, timeout=timeout) as res:
+            open = urllib.request.urlopen if self._opener is None else self._opener.open
+            with open(req, timeout=timeout) as res:
                 return res.status, json.loads(res.read().decode()), dict(res.headers)
         except urllib.error.HTTPError as e:
             return e.code, json.loads(e.read().decode()), dict(e.headers)
@@ -114,14 +122,18 @@ class UrllibClient(HttpClient):
 
 
 class RequestsClient(HttpClient):
-    def __init__(self, timeout: float = DEFAULT_TIMEOUT):
+    def __init__(
+        self, timeout: float = DEFAULT_TIMEOUT, proxies: MutableMapping[str, str] | None = None
+    ):
         if not requests:
             raise ImportError(
                 "It appears `requests` is not installed. "
                 "Please install it to use the RequestsClient."
             )
+
         self._session = requests.Session()
         self._timeout = timeout
+        self._proxies = proxies
 
     def get(
         self,
@@ -137,6 +149,7 @@ class RequestsClient(HttpClient):
                 params=params,
                 headers=headers,
                 timeout=(self._timeout if timeout is None else timeout),
+                proxies=self._proxies,
             )
             return res.status_code, res.json(), res.headers
         except requests.RequestException as e:
@@ -149,7 +162,7 @@ class RequestsClient(HttpClient):
 
 
 class HttpxClient(HttpClient):
-    def __init__(self, timeout: float = DEFAULT_TIMEOUT):
+    def __init__(self, timeout: float = DEFAULT_TIMEOUT, proxy: str | None = None):
         if not httpx:
             raise ImportError(
                 "It appears `httpx` is not installed. Please install it to use the HttpxClient."
@@ -161,7 +174,7 @@ class HttpxClient(HttpClient):
         # the user doesn't set a specific timeout on the request, it is slightly annoying to
         # indicate that the default client timeout should be used. You can do this by not passing
         # a timeout, but this creates some not-so-nice duplicated code with an if-else.
-        self._client = httpx.Client(timeout=timeout)
+        self._client = httpx.Client(proxy=proxy)
 
     def get(
         self,
@@ -185,7 +198,7 @@ class HttpxClient(HttpClient):
 
 
 class HttpxAsyncClient(AsyncHttpClient):
-    def __init__(self, timeout: float = DEFAULT_TIMEOUT):
+    def __init__(self, timeout: float = DEFAULT_TIMEOUT, proxy: str | None = None):
         if not httpx:
             raise ImportError(
                 "It appears `httpx` is not installed. "
@@ -198,7 +211,7 @@ class HttpxAsyncClient(AsyncHttpClient):
         # the user doesn't set a specific timeout on the request, it is slightly annoying to
         # indicate that the default client timeout should be used. You can do this by not passing
         # a timeout, but this creates some not-so-nice duplicated code with an if-else.
-        self._client = httpx.AsyncClient()
+        self._client = httpx.AsyncClient(proxy=proxy)
 
     async def get(
         self,
@@ -222,13 +235,14 @@ class HttpxAsyncClient(AsyncHttpClient):
 
 
 class AioHttpClient(AsyncHttpClient):
-    def __init__(self, timeout: float = DEFAULT_TIMEOUT):
+    def __init__(self, timeout: float = DEFAULT_TIMEOUT, proxy: str | None = None):
         if not aiohttp:
             raise ImportError(
                 "It appears `aiohttp` is not installed. "
                 "Please install it to use the AioHttpClient."
             )
         self._timeout = timeout
+        self._proxy = proxy
 
         # We don't set the timeout on the client itself, as it is simpler to set it per request.
         # Why? A user may or may not override the timeout on a per-request basis. In the case
@@ -252,6 +266,7 @@ class AioHttpClient(AsyncHttpClient):
                 params=params,
                 headers=headers,
                 timeout=aiohttp.ClientTimeout(timeout),
+                proxy=self._proxy,
             ) as response:
                 return response.status, await response.json(), response.headers
         except aiohttp.ClientError as e:
