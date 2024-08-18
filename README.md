@@ -15,9 +15,11 @@ Install the package with pip as you would any other python package.
 pip install ensembledata
 ```
 
+It's also recommended (though not mandatory) to install `httpx` for sending requests, however, the `requests` and `aiohttp` packages can also be used. See [configuring an http client](#configure-a-http-client) for more info.
+
 ### Requirements
 
-- The package only supports Python 3.7 and above.
+- Python 3.7+. 
 
 ## Usage
 
@@ -42,9 +44,8 @@ print("Units charged:", result.units_charged)
 Get started with the [TikTok API Guide](https://github.com/ensembledata/tiktok-scraper). Find out which endpoints are available, and how you can use them with examples using the ensembledata python package.
 
 #### Instagram Guide
-Get started with the [Instagram API Guide](https://github.com/ensembledata/instagram-scraper). Find out which endpoints are available, and how you can use them with examples using the ensembledata python package.
+Coming soon...
 
-<br>
 <br>
 
 ### Missing Endpoints / Parameters
@@ -66,7 +67,6 @@ client = EDClient("API-TOKEN")
 result = client.instagram.user_info(username="...", extra_params={"baz": "..."})
 ```
 
-<br>
 <br>
 
 ### Handling Errors
@@ -99,11 +99,12 @@ except Exception as e:
 ```
 
 <br>
-<br>
 
 ### Async 
 
 This package provides an asynchronous client, `EDAsyncClient`, which will give you access to async versions of all the same methods that can be found on the `EDClient`. 
+
+Note: you must install either `httpx` or `aiohttp` for sending async requests.
 
 ```python
 import asyncio
@@ -119,9 +120,69 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-### Network Retries
+<br>
 
-By default the `EDClient` will perform 3 retries when it encounters network issues. If you would like to customise this behaviour, you can pass in the `max_network_retries` param as show below:
+### Configure a HTTP Client
+
+This package comes with support for `httpx`, `requests`, `aiohttp` and `urllib`. If you don't have any of these installed, `urllib` will be used by default. If you would like to use `httpx` for example, you just need to install it, and this package will automatically start using it to send API requests.
+
+#### Automatic Configuration
+
+By default, this package will automatically attempt to configure a http client using these libraries with the following order of preference:
+
+For `EDClient` (sync):
+1. `httpx`
+2. `requests`
+3. `urllib` (from the python standard library; no install required)
+
+For `EDAsyncClient` (async):
+1. `httpx`
+2. `aiohttp`
+
+#### Manual Configuration
+
+However, you can also manually specify which of the request libraries should be used via the `http_client` parameter. 
+
+Note: If you manually specify the `http_client` you must set `timeout` and `proxy` options on the http client rather than the EnsembleData client.
+
+You can configure the following http clients for the `EDClient`.
+
+```python
+from ensembledata.api import EDClient, RequestsClient, HttpxClient
+
+client = EDClient("API-TOKEN", http_client=HttpxClient())
+client = EDClient("API-TOKEN", http_client=RequestsClient())
+```
+
+And you can configure the following http clients for the `EDAsyncClient`.
+
+```python
+from ensembledata.api import EDAsyncClient, AioHttpClient, HttpxAsyncClient
+
+client = EDAsyncClient("API-TOKEN", http_client=HttpxAsyncClient())
+client = EDAsyncClient("API-TOKEN", http_client=AioHttpClient())
+```
+
+<br>
+
+### Configuring Timeout
+
+If you would like control over the read timeout, you can configure this either for all request by setting `timeout` when creating the `EDClient`, or you can specify the `timeout` per request, on any of the individual methods as shown below.
+
+Note: the timeout is specified in seconds and represents the total timeout for a request.
+
+```python
+from ensembledata.api import EDClient
+
+client = EDClient("API-TOKEN", timeout=120)
+result = client.tiktok.user_info_from_username(username="daviddobrik", timeout=10)
+```
+
+<br>
+
+### Configuring Network Retries
+
+By default the `EDClient` and `EDAsyncClient` will perform 3 retries when it encounters network issues. If you would like to customise this behaviour, you can pass in the `max_network_retries` parameter as shown below:
 
 Note: if the request times out, it will not be retried.
 
@@ -131,18 +192,22 @@ from ensembledata.api import EDClient
 client = EDClient("API-TOKEN", max_network_retries=5)
 ```
 
-### Configure Timeout
+<br>
 
-If you would like control over the read timeout, you can configure this either for all request by setting `timeout` when creating the `EDClient`, or you can specify the `timeout` per request, on any of the individual methods as shown below:
+### Configuring a Proxy
+
+You can configure a proxy via the client `proxy` parameter.
+
 
 Note: the timeout is specified in seconds.
 
 ```python
 from ensembledata.api import EDClient
 
-client = EDClient("API-TOKEN", timeout=120)
-result = client.tiktok.user_info_from_username(username="daviddobrik", timeout=10)
+client = EDClient("API-TOKEN", proxy="http://user:pass@example.com:1234")
 ```
+
+<br>
 
 ### Types
 
