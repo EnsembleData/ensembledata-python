@@ -967,8 +967,10 @@ class EDAsyncClient:
         self.twitch = TwitchEndpoints(self.requester)
         self.reddit = RedditEndpoints(self.requester)
 
-    async def request(self, uri: str, params: Mapping[str, Any] | None = None) -> EDResponse:
-        return await self.requester.get(uri, params=params or {})
+    async def request(
+        self, uri: str, params: Mapping[str, Any] | None = None, timeout: float | None = None
+    ) -> EDResponse:
+        return await self.requester.get(uri, params=params or {}, timeout=timeout)
 
     async def close(self) -> None:
         await self.requester.http_client.close()

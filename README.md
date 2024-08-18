@@ -56,7 +56,7 @@ If you find that one of the endpoints from our [API docs](https://ensembledata.c
 from ensembledata.api import EDClient
 
 client = EDClient("API-TOKEN")
-result = client.request("/instagram/[example]", params={"foo": "...", "bar": "..."})
+result = client.request("/instagram/example", params={"foo": "...", "bar": "..."})
 ```
 
 If you find that one the parameters to an existing endpoint is missing, you can still send this parameter via the `extra_params` dictionary which is available on all endpoint methods. See the example below:
@@ -124,7 +124,7 @@ if __name__ == "__main__":
 
 ### Configure a HTTP Client
 
-This package comes with support for `httpx`, `requests`, `aiohttp` and `urllib`. If you don't have any of these installed, `urllib` will be used by default. If you would like to use `httpx` for example, you just need to install it, and this package will automatically start using it to send API requests.
+This package comes with support for `httpx`, `requests`, `aiohttp` and `urllib`. If you don't have any of the first 3 installed, `urllib` will be used by default. If you would like to use `httpx`, for example, you just need to install it, and this package will automatically start using it to send API requests.
 
 #### Automatic Configuration
 

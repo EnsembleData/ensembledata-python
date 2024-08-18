@@ -77,8 +77,13 @@ class ED{{ "Async" if async_methods else "" }}Client:
         self.{{ tag|lower }} = {{ tag }}Endpoints(self.requester)
         {% endfor %}
 
-    {{ "async " if async_methods else "" }}def request(self, uri: str, params: Mapping[str, Any] | None = None) -> EDResponse:
-        return {{ "await " if async_methods else "" }}self.requester.get(uri, params=params or {})
+    {{ "async " if async_methods else "" }}def request(
+        self, 
+        uri: str, 
+        params: Mapping[str, Any] | None = None, 
+        timeout: float | None = None
+    ) -> EDResponse:
+        return {{ "await " if async_methods else "" }}self.requester.get(uri, params=params or {}, timeout=timeout)
 
     {{ "async " if async_methods else "" }}def close(self) -> None:
         {{ "await " if async_methods else "" }}self.requester.http_client.close()

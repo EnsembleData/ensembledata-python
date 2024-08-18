@@ -951,8 +951,10 @@ class EDClient:
         self.twitch = TwitchEndpoints(self.requester)
         self.reddit = RedditEndpoints(self.requester)
 
-    def request(self, uri: str, params: Mapping[str, Any] | None = None) -> EDResponse:
-        return self.requester.get(uri, params=params or {})
+    def request(
+        self, uri: str, params: Mapping[str, Any] | None = None, timeout: float | None = None
+    ) -> EDResponse:
+        return self.requester.get(uri, params=params or {}, timeout=timeout)
 
     def close(self) -> None:
         self.requester.http_client.close()
