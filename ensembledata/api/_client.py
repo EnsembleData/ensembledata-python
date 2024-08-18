@@ -932,7 +932,7 @@ class EDClient:
         *,
         timeout: float | UseDefault = USE_DEFAULT,
         max_network_retries: int | UseDefault = USE_DEFAULT,
-        proxy: int | None = None,
+        proxy: str | None = None,
         http_client: HttpClient | None = None,
     ):
         kwargs = dict()
