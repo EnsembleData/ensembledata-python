@@ -8,7 +8,7 @@ if sys.version_info < (3, 8):
 else:
     from typing import Literal
 
-from ._defaults import DEFAULT_MAX_NETWORK_RETRIES, DEFAULT_TIMEOUT, USE_DEFAULT, UseDefault
+from ._defaults import USE_DEFAULT, UseDefault
 from ._requester import Requester
 
 if TYPE_CHECKING:
@@ -930,16 +930,20 @@ class EDClient:
         self,
         token: str,
         *,
-        timeout: float = DEFAULT_TIMEOUT,
-        max_network_retries: int = DEFAULT_MAX_NETWORK_RETRIES,
+        timeout: float | UseDefault = USE_DEFAULT,
+        max_network_retries: int | UseDefault = USE_DEFAULT,
+        proxy: int | None = None,
         http_client: HttpClient | None = None,
     ):
-        self.requester = Requester(
-            token,
-            timeout=timeout,
-            max_network_retries=max_network_retries,
-            http_client=http_client,
-        )
+        kwargs = dict()
+        kwargs["http_client"] = http_client
+        kwargs["proxy"] = proxy
+        if timeout is not USE_DEFAULT:
+            kwargs["timeout"] = timeout
+        if max_network_retries is not USE_DEFAULT:
+            kwargs["max_network_retries"] = max_network_retries
+
+        self.requester = Requester(token, **kwargs)
         self.customer = CustomerEndpoints(self.requester)
         self.tiktok = TiktokEndpoints(self.requester)
         self.youtube = YoutubeEndpoints(self.requester)

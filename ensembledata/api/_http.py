@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import socket
 import sys
-from typing import TYPE_CHECKING, Any, Mapping
+from typing import Any, Mapping
 
 from ._defaults import DEFAULT_TIMEOUT
 
@@ -30,9 +30,6 @@ import json
 import urllib.error
 import urllib.parse
 import urllib.request
-
-if TYPE_CHECKING:
-    from collections.abc import MutableMapping
 
 
 class RetryableError(Exception):
@@ -68,11 +65,11 @@ class AsyncHttpClient(Protocol):
     async def close(self) -> None: ...
 
 
-def default_async_client(timeout: float) -> AsyncHttpClient:
+def default_async_client(*, timeout: float, proxy: str | None) -> AsyncHttpClient:
     if httpx:
-        return HttpxAsyncClient(timeout=timeout)
+        return HttpxAsyncClient(timeout=timeout, proxy=proxy)
     if aiohttp:
-        return AioHttpClient(timeout=timeout)
+        return AioHttpClient(timeout=timeout, proxy=proxy)
     raise ImportError(
         "No async HTTP client available. To use async please make sure to install"
         " either `httpx` or `aiohttp`. Alternatively, you can implement your own version of the"
@@ -80,20 +77,20 @@ def default_async_client(timeout: float) -> AsyncHttpClient:
     )
 
 
-def default_sync_client(timeout: float) -> HttpClient:
+def default_sync_client(*, timeout: float, proxy: str | None) -> HttpClient:
     if httpx:
-        return HttpxClient(timeout=timeout)
+        return HttpxClient(timeout=timeout, proxy=proxy)
     if requests:
-        return RequestsClient(timeout=timeout)
-    return UrllibClient()
+        return RequestsClient(timeout=timeout, proxy=proxy)
+    return UrllibClient(timeout=timeout, proxy=proxy)
 
 
 class UrllibClient(HttpClient):
-    def __init__(self, timeout: float = DEFAULT_TIMEOUT, proxies: dict[str, str] | None = None):
+    def __init__(self, timeout: float = DEFAULT_TIMEOUT, proxy: str | None = None):
         self._timeout = timeout
         self._opener = None
-        if proxies is not None:
-            proxy_handler = urllib.request.ProxyHandler(proxies)
+        if proxy is not None:
+            proxy_handler = urllib.request.ProxyHandler({"https": proxy})
             self._opener = urllib.request.build_opener(proxy_handler)
 
     def get(
@@ -125,7 +122,7 @@ class RequestsClient(HttpClient):
     def __init__(
         self,
         timeout: float = DEFAULT_TIMEOUT,
-        proxies: MutableMapping[str, str] | None = None,
+        proxy: str | None = None,
         session: requests.Session | None = None,  # type: ignore[unused-ignore]
     ):
         if not requests:
@@ -136,8 +133,8 @@ class RequestsClient(HttpClient):
 
         self._timeout = timeout
         self._session = requests.Session() if session is None else session
-        if proxies is not None:
-            self._session.proxies.update(proxies)
+        if proxy is not None:
+            self._session.proxies.update({"https": proxy})
 
     def get(
         self,

@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Mapping
 from warnings import warn
 
+from ._defaults import DEFAULT_MAX_NETWORK_RETRIES, DEFAULT_TIMEOUT
 from ._http import (
     AsyncHttpClient,
     HttpClient,
@@ -53,15 +54,16 @@ class Requester:
         self,
         token: str,
         *,
-        timeout: float,
-        max_network_retries: int,
+        timeout: float = DEFAULT_TIMEOUT,
+        max_network_retries: int = DEFAULT_MAX_NETWORK_RETRIES,
+        proxy: str | None = None,
         http_client: HttpClient | None = None,
     ):
         _check_token(token)
         self.token = token
         self.timeout = timeout
         self.max_network_retries = max_network_retries
-        self.http_client = http_client or default_sync_client(timeout=timeout)
+        self.http_client = http_client or default_sync_client(timeout=timeout, proxy=proxy)
 
     def get(
         self,
@@ -93,15 +95,16 @@ class AsyncRequester:
         self,
         token: str,
         *,
-        timeout: float,
-        max_network_retries: int,
-        http_client: AsyncHttpClient | None = None,
+        timeout: float = DEFAULT_TIMEOUT,
+        max_network_retries: int = DEFAULT_MAX_NETWORK_RETRIES,
+        proxy: str | None,
+        http_client: AsyncHttpClient | None,
     ):
         _check_token(token)
         self.token = token
         self.timeout = timeout
         self.max_network_retries = max_network_retries
-        self.http_client = http_client or default_async_client(timeout=timeout)
+        self.http_client = http_client or default_async_client(timeout=timeout, proxy=proxy)
 
     async def get(
         self,

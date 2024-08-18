@@ -150,7 +150,7 @@ You can configure the following http clients for the `EDClient`.
 ```python
 from ensembledata.api import EDClient, RequestsClient, HttpxClient
 
-client = EDClient("API-TOKEN", http_client=HttpxClient())
+client = EDClient("API-TOKEN", http_client=HttpxClient(timeout=10, proxy="http://..."))
 client = EDClient("API-TOKEN", http_client=RequestsClient())
 ```
 
