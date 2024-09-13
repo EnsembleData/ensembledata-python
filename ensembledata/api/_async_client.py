@@ -946,6 +946,75 @@ class RedditEndpoints:
         return await self.requester.get("/reddit/post/comments", params=params, timeout=timeout)
 
 
+class ThreadsEndpoints:
+    def __init__(self, requester: AsyncRequester):
+        self.requester = requester
+
+    async def search_keyword(
+        self,
+        *,
+        name: str,
+        sorting: Literal["0", "1"] | UseDefault = USE_DEFAULT,
+        extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
+    ) -> EDResponse:
+        params: dict[str, Any] = {
+            "name": name,
+            "sorting": sorting,
+        }
+        if extra_params is not None:
+            params = {**extra_params, **params}
+        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
+        return await self.requester.get("/threads/keyword/search", params=params, timeout=timeout)
+
+    async def user_search(
+        self,
+        *,
+        name: str,
+        extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
+    ) -> EDResponse:
+        params: dict[str, Any] = {
+            "name": name,
+        }
+        if extra_params is not None:
+            params = {**extra_params, **params}
+        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
+        return await self.requester.get("/threads/user/search", params=params, timeout=timeout)
+
+    async def user_info(
+        self,
+        *,
+        id: int,
+        extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
+    ) -> EDResponse:
+        params: dict[str, Any] = {
+            "id": id,
+        }
+        if extra_params is not None:
+            params = {**extra_params, **params}
+        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
+        return await self.requester.get("/threads/user/info", params=params, timeout=timeout)
+
+    async def user_posts(
+        self,
+        *,
+        id: int,
+        chunk_size: int | UseDefault = USE_DEFAULT,
+        extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
+    ) -> EDResponse:
+        params: dict[str, Any] = {
+            "id": id,
+            "chunk_size": chunk_size,
+        }
+        if extra_params is not None:
+            params = {**extra_params, **params}
+        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
+        return await self.requester.get("/threads/user/posts", params=params, timeout=timeout)
+
+
 class EDAsyncClient:
     def __init__(self, token: str, *, timeout: float = 600, max_network_retries: int = 3):
         self.requester = AsyncRequester(
@@ -957,6 +1026,7 @@ class EDAsyncClient:
         self.instagram = InstagramEndpoints(self.requester)
         self.twitch = TwitchEndpoints(self.requester)
         self.reddit = RedditEndpoints(self.requester)
+        self.threads = ThreadsEndpoints(self.requester)
 
     async def request(self, uri: str, params: Mapping[str, Any] | None = None) -> EDResponse:
         return await self.requester.get(uri, params=params or {})

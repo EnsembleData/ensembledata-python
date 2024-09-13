@@ -1,4 +1,4 @@
 #!/bin/sh
-python -m codegen
+python3 -m codegen
 ruff format
 
