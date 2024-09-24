@@ -930,6 +930,56 @@ class RedditEndpoints:
         return self.requester.get("/reddit/post/comments", params=params, timeout=timeout)
 
 
+class TwitterEndpoints:
+    def __init__(self, requester: Requester):
+        self.requester = requester
+
+    def user_info(
+        self,
+        *,
+        name: str,
+        extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
+    ) -> EDResponse:
+        params: dict[str, Any] = {
+            "name": name,
+        }
+        if extra_params is not None:
+            params = {**extra_params, **params}
+        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
+        return self.requester.get("/twitter/user/info", params=params, timeout=timeout)
+
+    def user_tweets(
+        self,
+        *,
+        id: int,
+        extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
+    ) -> EDResponse:
+        params: dict[str, Any] = {
+            "id": id,
+        }
+        if extra_params is not None:
+            params = {**extra_params, **params}
+        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
+        return self.requester.get("/twitter/user/tweets", params=params, timeout=timeout)
+
+    def post_info(
+        self,
+        *,
+        id: int,
+        extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
+    ) -> EDResponse:
+        params: dict[str, Any] = {
+            "id": id,
+        }
+        if extra_params is not None:
+            params = {**extra_params, **params}
+        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
+        return self.requester.get("/twitter/post/info", params=params, timeout=timeout)
+
+
 class ThreadsEndpoints:
     def __init__(self, requester: Requester):
         self.requester = requester
@@ -998,6 +1048,41 @@ class ThreadsEndpoints:
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
         return self.requester.get("/threads/user/posts", params=params, timeout=timeout)
 
+    def post_replies(
+        self,
+        *,
+        id: int,
+        extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
+    ) -> EDResponse:
+        params: dict[str, Any] = {
+            "id": id,
+        }
+        if extra_params is not None:
+            params = {**extra_params, **params}
+        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
+        return self.requester.get("/threads/post/replies", params=params, timeout=timeout)
+
+
+class SnapchatEndpoints:
+    def __init__(self, requester: Requester):
+        self.requester = requester
+
+    def user_info(
+        self,
+        *,
+        name: str,
+        extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
+    ) -> EDResponse:
+        params: dict[str, Any] = {
+            "name": name,
+        }
+        if extra_params is not None:
+            params = {**extra_params, **params}
+        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
+        return self.requester.get("/snapchat/user/info", params=params, timeout=timeout)
+
 
 class EDClient:
     def __init__(self, token: str, *, timeout: float = 600, max_network_retries: int = 3):
@@ -1008,7 +1093,9 @@ class EDClient:
         self.instagram = InstagramEndpoints(self.requester)
         self.twitch = TwitchEndpoints(self.requester)
         self.reddit = RedditEndpoints(self.requester)
+        self.twitter = TwitterEndpoints(self.requester)
         self.threads = ThreadsEndpoints(self.requester)
+        self.snapchat = SnapchatEndpoints(self.requester)
 
     async def request(self, uri: str, params: Mapping[str, Any] | None = None) -> EDResponse:
         return self.requester.get(uri, params=params or {})
