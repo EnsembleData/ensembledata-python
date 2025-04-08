@@ -423,6 +423,25 @@ class TiktokEndpoints:
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
         return self.requester.get("/tt/user/liked-posts", params=params, timeout=timeout)
 
+    def lives_search(
+        self,
+        *,
+        keyword: str,
+        cursor: int | UseDefault = USE_DEFAULT,
+        country: str | UseDefault = USE_DEFAULT,
+        extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
+    ) -> EDResponse:
+        params: dict[str, Any] = {
+            "keyword": keyword,
+            "cursor": cursor,
+            "country": country,
+        }
+        if extra_params is not None:
+            params = {**extra_params, **params}
+        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
+        return self.requester.get("/tt/live/search", params=params, timeout=timeout)
+
 
 class YoutubeEndpoints:
     def __init__(self, requester: Requester):
@@ -495,12 +514,14 @@ class YoutubeEndpoints:
         *,
         channel_id: str,
         from_url: bool | UseDefault = USE_DEFAULT,
+        get_additional_info: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "browseId": channel_id,
             "from_url": from_url,
+            "get_additional_info": get_additional_info,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -928,14 +949,12 @@ class RedditEndpoints:
     def post_comments(
         self,
         *,
-        id: str,
-        cursor: str | UseDefault = USE_DEFAULT,
+        permalink: str,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
-            "id": id,
-            "cursor": cursor,
+            "permalink": permalink,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
