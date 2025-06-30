@@ -846,25 +846,6 @@ class InstagramEndpoints:
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
         return await self.requester.get("/instagram/post/details", params=params, timeout=timeout)
 
-    async def hashtag_posts(
-        self,
-        *,
-        hashtag: str,
-        cursor: str | UseDefault = USE_DEFAULT,
-        get_author_info: bool | UseDefault = USE_DEFAULT,
-        extra_params: Mapping[str, Any] | None = None,
-        timeout: float | None = None,
-    ) -> EDResponse:
-        params: dict[str, Any] = {
-            "name": hashtag,
-            "cursor": cursor,
-            "get_author_info": get_author_info,
-        }
-        if extra_params is not None:
-            params = {**extra_params, **params}
-        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
-        return await self.requester.get("/instagram/hashtag/posts", params=params, timeout=timeout)
-
     async def music_posts(
         self,
         *,
