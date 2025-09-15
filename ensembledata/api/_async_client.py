@@ -156,6 +156,8 @@ class TiktokEndpoints:
         cursor: int | UseDefault = USE_DEFAULT,
         oldest_createtime: int | UseDefault = USE_DEFAULT,
         alternative_method: bool | UseDefault = USE_DEFAULT,
+        new_version: bool | UseDefault = USE_DEFAULT,
+        download_video: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
@@ -165,6 +167,8 @@ class TiktokEndpoints:
             "start_cursor": cursor,
             "oldest_createtime": oldest_createtime,
             "alternative_method": alternative_method,
+            "new_version": new_version,
+            "download_video": download_video,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -181,6 +185,8 @@ class TiktokEndpoints:
         cursor: int | UseDefault = USE_DEFAULT,
         oldest_createtime: int | UseDefault = USE_DEFAULT,
         alternative_method: bool | UseDefault = USE_DEFAULT,
+        new_version: bool | UseDefault = USE_DEFAULT,
+        download_video: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
@@ -190,6 +196,8 @@ class TiktokEndpoints:
             "start_cursor": cursor,
             "oldest_createtime": oldest_createtime,
             "alternative_method": alternative_method,
+            "new_version": new_version,
+            "download_video": download_video,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -218,12 +226,14 @@ class TiktokEndpoints:
         *,
         sec_uid: str,
         alternative_method: bool | UseDefault = USE_DEFAULT,
+        new_version: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "secUid": sec_uid,
             "alternative_method": alternative_method,
+            "new_version": new_version,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -251,11 +261,15 @@ class TiktokEndpoints:
         self,
         *,
         url: str,
+        new_version: bool | UseDefault = USE_DEFAULT,
+        download_video: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "url": url,
+            "new_version": new_version,
+            "download_video": download_video,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -266,11 +280,15 @@ class TiktokEndpoints:
         self,
         *,
         aweme_ids: Sequence[str],
+        new_version: bool | UseDefault = USE_DEFAULT,
+        download_video: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "ids": ";".join(aweme_ids),
+            "new_version": new_version,
+            "download_video": download_video,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -282,12 +300,14 @@ class TiktokEndpoints:
         *,
         aweme_id: str,
         cursor: int | UseDefault = USE_DEFAULT,
+        new_version: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "aweme_id": aweme_id,
             "cursor": cursor,
+            "new_version": new_version,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -355,11 +375,13 @@ class TiktokEndpoints:
         self,
         *,
         music_id: str,
+        new_version: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "id": music_id,
+            "new_version": new_version,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -372,6 +394,7 @@ class TiktokEndpoints:
         id: str,
         sec_uid: str,
         cursor: int | UseDefault = USE_DEFAULT,
+        new_version: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
@@ -379,6 +402,7 @@ class TiktokEndpoints:
             "id": id,
             "secUid": sec_uid,
             "cursor": cursor,
+            "new_version": new_version,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -392,6 +416,7 @@ class TiktokEndpoints:
         sec_uid: str,
         cursor: int | UseDefault = USE_DEFAULT,
         page_token: str | UseDefault = USE_DEFAULT,
+        new_version: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
@@ -400,6 +425,7 @@ class TiktokEndpoints:
             "secUid": sec_uid,
             "cursor": cursor,
             "page_token": page_token,
+            "new_version": new_version,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -845,6 +871,25 @@ class InstagramEndpoints:
             params = {**extra_params, **params}
         params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
         return await self.requester.get("/instagram/post/details", params=params, timeout=timeout)
+
+    async def post_comments(
+        self,
+        *,
+        media_id: int,
+        cursor: str,
+        sorting: Literal["popular", "recent"],
+        extra_params: Mapping[str, Any] | None = None,
+        timeout: float | None = None,
+    ) -> EDResponse:
+        params: dict[str, Any] = {
+            "media_id": media_id,
+            "cursor": cursor,
+            "sorting": sorting,
+        }
+        if extra_params is not None:
+            params = {**extra_params, **params}
+        params = {k: v for k, v in params.items() if not (v is None or v is USE_DEFAULT)}
+        return await self.requester.get("/instagram/post/comments", params=params, timeout=timeout)
 
     async def music_posts(
         self,
