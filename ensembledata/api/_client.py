@@ -263,7 +263,6 @@ class TiktokEndpoints:
         url: str,
         new_version: bool | UseDefault = USE_DEFAULT,
         download_video: bool | UseDefault = USE_DEFAULT,
-        alternative_method: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
@@ -271,7 +270,6 @@ class TiktokEndpoints:
             "url": url,
             "new_version": new_version,
             "download_video": download_video,
-            "alternative_method": alternative_method,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -284,7 +282,6 @@ class TiktokEndpoints:
         aweme_ids: Sequence[str],
         new_version: bool | UseDefault = USE_DEFAULT,
         download_video: bool | UseDefault = USE_DEFAULT,
-        alternative_method: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
@@ -292,7 +289,6 @@ class TiktokEndpoints:
             "ids": ";".join(aweme_ids),
             "new_version": new_version,
             "download_video": download_video,
-            "alternative_method": alternative_method,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -398,6 +394,7 @@ class TiktokEndpoints:
         id: str,
         sec_uid: str,
         cursor: int | UseDefault = USE_DEFAULT,
+        page_token: str | UseDefault = USE_DEFAULT,
         new_version: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
@@ -406,6 +403,7 @@ class TiktokEndpoints:
             "id": id,
             "secUid": sec_uid,
             "cursor": cursor,
+            "page_token": page_token,
             "new_version": new_version,
         }
         if extra_params is not None:
