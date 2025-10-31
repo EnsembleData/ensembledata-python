@@ -155,7 +155,6 @@ class TiktokEndpoints:
         depth: int,
         cursor: int | UseDefault = USE_DEFAULT,
         oldest_createtime: int | UseDefault = USE_DEFAULT,
-        alternative_method: bool | UseDefault = USE_DEFAULT,
         new_version: bool | UseDefault = USE_DEFAULT,
         download_video: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
@@ -166,7 +165,6 @@ class TiktokEndpoints:
             "depth": depth,
             "start_cursor": cursor,
             "oldest_createtime": oldest_createtime,
-            "alternative_method": alternative_method,
             "new_version": new_version,
             "download_video": download_video,
         }
@@ -184,7 +182,6 @@ class TiktokEndpoints:
         depth: int,
         cursor: int | UseDefault = USE_DEFAULT,
         oldest_createtime: int | UseDefault = USE_DEFAULT,
-        alternative_method: bool | UseDefault = USE_DEFAULT,
         new_version: bool | UseDefault = USE_DEFAULT,
         download_video: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
@@ -195,7 +192,6 @@ class TiktokEndpoints:
             "depth": depth,
             "start_cursor": cursor,
             "oldest_createtime": oldest_createtime,
-            "alternative_method": alternative_method,
             "new_version": new_version,
             "download_video": download_video,
         }
