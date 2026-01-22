@@ -222,14 +222,12 @@ class TiktokEndpoints:
         *,
         sec_uid: str,
         alternative_method: bool | UseDefault = USE_DEFAULT,
-        new_version: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "secUid": sec_uid,
             "alternative_method": alternative_method,
-            "new_version": new_version,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -296,14 +294,12 @@ class TiktokEndpoints:
         *,
         aweme_id: str,
         cursor: int | UseDefault = USE_DEFAULT,
-        new_version: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "aweme_id": aweme_id,
             "cursor": cursor,
-            "new_version": new_version,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -371,13 +367,11 @@ class TiktokEndpoints:
         self,
         *,
         music_id: str,
-        new_version: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
         params: dict[str, Any] = {
             "id": music_id,
-            "new_version": new_version,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -391,7 +385,6 @@ class TiktokEndpoints:
         sec_uid: str,
         cursor: int | UseDefault = USE_DEFAULT,
         page_token: str | UseDefault = USE_DEFAULT,
-        new_version: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
@@ -400,7 +393,6 @@ class TiktokEndpoints:
             "secUid": sec_uid,
             "cursor": cursor,
             "page_token": page_token,
-            "new_version": new_version,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
@@ -414,7 +406,6 @@ class TiktokEndpoints:
         sec_uid: str,
         cursor: int | UseDefault = USE_DEFAULT,
         page_token: str | UseDefault = USE_DEFAULT,
-        new_version: bool | UseDefault = USE_DEFAULT,
         extra_params: Mapping[str, Any] | None = None,
         timeout: float | None = None,
     ) -> EDResponse:
@@ -423,7 +414,6 @@ class TiktokEndpoints:
             "secUid": sec_uid,
             "cursor": cursor,
             "page_token": page_token,
-            "new_version": new_version,
         }
         if extra_params is not None:
             params = {**extra_params, **params}
